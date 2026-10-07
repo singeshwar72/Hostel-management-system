@@ -1,0 +1,329 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+    <h2>Help & Support Ticket</h2>
+    <form action="/support" method="POST">
+        <label>Issue Category:</label>
+        <select name="category" required>
+            <option value="Electrical">Electrical</option>
+            <option value="Plumbing">Plumbing</option>
+            <option value="Cleaning">Cleaning</option>
+            <option value="Other">Other</option>
+        </select>
+        
+        <label>Detailed Message:</label>
+        <textarea name="message" rows="5" placeholder="Describe your issue here..." required></textarea>
+        
+        <button type="submit">Submit Ticket</button>
+    </form>
+    {% if message %}<div class="message">{{ message }}</div>{% endif %}
+</div>
+{% endblock %}{% extends 'base.html' %}
+
+{% block content %}
+
+
+<style>
+
+.ticket-wrapper{
+
+max-width:700px;
+
+margin:30px auto;
+
+}
+
+
+
+.ticket-card{
+
+background:white;
+
+padding:35px;
+
+border-radius:22px;
+
+box-shadow:0 15px 35px rgba(0,0,0,.08);
+
+}
+
+
+
+.ticket-title{
+
+display:flex;
+
+align-items:center;
+
+gap:12px;
+
+font-size:25px;
+
+font-weight:700;
+
+color:#1e293b;
+
+margin-bottom:25px;
+
+}
+
+
+
+.ticket-title i{
+
+color:#2563eb;
+
+}
+
+
+
+.form-group{
+
+margin-bottom:22px;
+
+}
+
+
+
+label{
+
+display:block;
+
+font-weight:600;
+
+color:#334155;
+
+margin-bottom:8px;
+
+}
+
+
+
+textarea{
+
+width:100%;
+
+height:160px;
+
+padding:16px;
+
+border-radius:14px;
+
+border:2px solid #e2e8f0;
+
+font-size:15px;
+
+resize:none;
+
+outline:none;
+
+transition:.3s;
+
+}
+
+
+
+textarea:focus{
+
+border-color:#2563eb;
+
+box-shadow:0 0 12px rgba(37,99,235,.15);
+
+}
+
+
+
+
+
+.submit-btn{
+
+
+width:100%;
+
+
+padding:15px;
+
+
+border:none;
+
+
+border-radius:14px;
+
+
+background:linear-gradient(135deg,#2563eb,#3b82f6);
+
+
+color:white;
+
+
+font-size:16px;
+
+
+font-weight:700;
+
+
+cursor:pointer;
+
+
+transition:.3s;
+
+
+}
+
+
+
+
+.submit-btn:hover{
+
+
+transform:translateY(-3px);
+
+
+box-shadow:0 12px 25px rgba(37,99,235,.3);
+
+
+}
+
+
+
+
+
+.message{
+
+
+margin-top:20px;
+
+padding:15px;
+
+border-radius:12px;
+
+background:#dcfce7;
+
+color:#166534;
+
+border-left:5px solid #22c55e;
+
+font-weight:600;
+
+text-align:center;
+
+}
+
+
+
+
+
+</style>
+
+
+
+
+
+<div class="ticket-wrapper">
+
+
+<div class="ticket-card">
+
+
+
+<div class="ticket-title">
+
+<i class="fa-solid fa-envelope-open-text"></i>
+
+Submit Hostel Complaint
+
+
+</div>
+
+
+
+
+
+<form method="POST">
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+
+Detailed Message:
+
+</label>
+
+
+
+<textarea
+
+name="message"
+
+placeholder="Describe your issue here..."
+
+required></textarea>
+
+
+
+</div>
+
+
+
+
+
+
+
+<button class="submit-btn" type="submit">
+
+
+<i class="fa-solid fa-paper-plane"></i>
+
+Submit Ticket
+
+
+</button>
+
+
+
+
+
+</form>
+
+
+
+
+
+
+
+{% if message %}
+
+
+<div class="message">
+
+
+<i class="fa-solid fa-circle-check"></i>
+
+{{ message }}
+
+
+</div>
+
+
+{% endif %}
+
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+{% endblock %}

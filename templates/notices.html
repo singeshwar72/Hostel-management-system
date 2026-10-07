@@ -1,0 +1,20 @@
+{% extends 'base.html' if portal == 'official' else 'student_base.html' %}
+{% block title %}Notices | BCE Hostel{% endblock %}
+{% block content %}
+<div class="page-head"><h1>{% if portal == 'official' %}Notices & Announcements{% else %}Hostel Notices{% endif %}</h1><p class="subtitle">{% if portal == 'official' %}Publish timely information for your hostel community.{% else %}Stay up to date with official hostel information.{% endif %}</p></div>
+{% if success %}<div class="alert success">{{ success }}</div>{% endif %}{% if error %}<div class="alert error">{{ error }}</div>{% endif %}
+{% if portal == 'official' %}
+<div class="panel">
+    <h2>Publish a notice</h2>
+    <form method="POST" class="grid">
+        <div><div class="field"><label>Title</label><input name="title" maxlength="200" required></div><div class="field"><label>Message</label><textarea name="message" required></textarea></div></div>
+        <div><div class="field"><label>Type</label><select name="notice_type"><option>Notice</option><option>Announcement</option></select></div><div class="field"><label>Category</label><input name="category" value="General" maxlength="50"></div><div class="field"><label>Audience</label><select name="audience"><option value="All">Everyone</option><option value="Students">Students only</option><option value="Officials">Officials only</option></select></div><div class="field"><label>Expiry date (optional)</label><input type="datetime-local" name="expires_at"></div><div class="field"><label><input type="checkbox" name="is_pinned" style="width:auto"> Pin this notice</label></div><button type="submit"><i class="fa-solid fa-paper-plane"></i> Publish</button></div>
+    </form>
+</div>
+{% endif %}
+<div class="panel"><h2>Published notices</h2>
+{% for notice in notices %}
+    <article class="notice"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><h3>{{ notice.Title }}</h3>{% if notice.Is_Pinned %}<span class="badge">Pinned</span>{% endif %}<span class="badge">{{ notice.Notice_Type }}</span></div><p>{{ notice.Message }}</p><div class="muted small">{{ notice.Category }} · Posted by {{ notice.Publisher_Name }} · {{ notice.Published_At.strftime('%d %b %Y, %I:%M %p') if notice.Published_At else '' }}{% if notice.Expires_At %} · Expires {{ notice.Expires_At.strftime('%d %b %Y') }}{% endif %}</div>{% if portal == 'official' %}<form method="POST" action="{{ url_for('delete_notice', notice_id=notice.Notice_ID) }}" style="margin-top:10px" onsubmit="return confirm('Delete this notice?');"><button class="danger" type="submit">Delete</button></form>{% endif %}</article>
+{% else %}<p class="empty">There are no active notices right now.</p>{% endfor %}
+</div>
+{% endblock %}

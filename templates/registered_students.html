@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registered Students - Official Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+        body{ background: #f4f6f9; display: flex; min-height: 100vh; color: #1e293b; }
+        
+        .sidebar{ width: 275px; background: #0b0f19; color: white; display: flex; flex-direction: column; padding: 30px 20px; box-shadow: 4px 0 20px rgba(0,0,0,0.08); }
+        .sidebar h2{ font-size: 1.2rem; margin-bottom: 40px; text-align: center; color: #38bdf8; letter-spacing: 1px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .sidebar a{ color: #94a3b8; text-decoration: none; padding: 13px 16px; border-radius: 12px; margin-bottom: 8px; display: flex; align-items: center; gap: 14px; transition: all 0.3s ease; font-size: 0.9rem; font-weight: 500; }
+        .sidebar a:hover{ background: rgba(56, 189, 248, 0.1); color: #ffffff; transform: translateX(4px); }
+        .sidebar a.active{ background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4); }
+        .main-content{ flex: 1; padding: 35px; overflow-y: auto; }
+        
+        .header{ margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .header h1{ color: #0f172a; font-size: 1.9rem; font-weight: 700; }
+        
+        .header-actions{ display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        .search-box{ position: relative; }
+        .search-box input{ padding: 10px 14px 10px 38px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 0.88rem; outline: none; width: 240px; background: white; transition: 0.2s; }
+        .search-box input:focus{ border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1); }
+        .search-box i{ position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+        
+        .btn-bulk{ padding: 10px 20px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); transition: 0.2s; }
+        .btn-bulk:hover{ transform: translateY(-2px); box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3); }
+        /* Quick Sub-Stats Bar */
+        .sub-stats{ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .sub-stat-card{ background: white; padding: 18px 20px; border-radius: 14px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .sub-stat-icon{ width: 42px; height: 42px; border-radius: 10px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+        .sub-stat-info h4{ font-size: 1.25rem; font-weight: 700; color: #0f172a; line-height: 1.1; }
+        .sub-stat-info p{ font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase; margin-top: 2px; }
+        .card{ background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
+        
+        table{ width: 100%; border-collapse: collapse; margin-top: 5px; }
+        th, td{ padding: 15px 16px; text-align: left; font-size: 0.88rem; border-bottom: 1px solid #f1f5f9; }
+        th{ background: #f8fafc; color: #475569; font-weight: 600; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.8px; }
+        tr:hover td{ background: #f8fafc; }
+        
+        .student-id{ color: #0284c7; font-weight: 700; }
+        .badge-branch{ background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+        .badge-room{ background: #dcfce7; color: #166534; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+        .badge-unassigned{ background: #fef3c7; color: #92400e; padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+        .btn-action{ padding: 6px 12px; border-radius: 8px; font-size: 0.78rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; margin-right: 4px; transition: 0.2s; }
+        .btn-edit{ background: #e0f2fe; color: #0369a1; }
+        .btn-edit:hover{ background: #bae6fd; }
+        .btn-unallocate{ background: #fee2e2; color: #991b1b; }
+        .btn-unallocate:hover{ background: #fecaca; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2><i class="fa-solid fa-shield-halved"></i> BCE OFFICIAL</h2>
+        <a href="{{ url_for('official_dashboard') }}"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+        <a href="{{ url_for('registered_students') }}" class="active"><i class="fa-solid fa-users-rectangle"></i> Registered Students</a>
+        <a href="{{ url_for('rooms_chart') }}"><i class="fa-solid fa-building-user"></i> Room Status Chart</a>
+        <a href="{{ url_for('support_inbox') }}"><i class="fa-solid fa-headset"></i> Support Inbox</a>
+        <a href="{{ url_for('official_profile') }}"><i class="fa-solid fa-user-gear"></i> Profile Settings</a>
+        <a href="{{ url_for('logout') }}" style="margin-top: auto; background: rgba(239, 68, 68, 0.1); color: #f87171;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <h1>Registered Students Directory</h1>
+            <div class="header-actions">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchInput" placeholder="Search student name or ID..." onkeyup="searchTable()">
+                </div>
+                <form action="{{ url_for('bulk_allocation') }}" method="POST" style="margin: 0;">
+                    <button type="submit" class="btn-bulk"><i class="fa-solid fa-bolt"></i> Auto Allocate</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Mini Stats Summary -->
+        <div class="sub-stats">
+            <div class="sub-stat-card">
+                <div class="sub-stat-icon"><i class="fa-solid fa-users"></i></div>
+                <div class="sub-stat-info">
+                    <h4>{{ students|length }}</h4>
+                    <p>Total Registered</p>
+                </div>
+            </div>
+            <div class="sub-stat-card">
+                <div class="sub-stat-icon" style="background: #dcfce7; color: #166534;"><i class="fa-solid fa-house-circle-check"></i></div>
+                <div class="sub-stat-info">
+                    <h4>
+                        {% set count = namespace(value=0) %}
+                        {% for s in students if s.Room_No != 'Not Assigned' %}{% set count.value = count.value + 1 %}{% endfor %}
+                        {{ count.value }}
+                    </h4>
+                    <p>Assigned Rooms</p>
+                </div>
+            </div>
+            <div class="sub-stat-card">
+                <div class="sub-stat-icon" style="background: #fef3c7; color: #92400e;"><i class="fa-solid fa-house-circle-exclamation"></i></div>
+                <div class="sub-stat-info">
+                    <h4>
+                        {% set count = namespace(value=0) %}
+                        {% for s in students if s.Room_No == 'Not Assigned' %}{% set count.value = count.value + 1 %}{% endfor %}
+                        {{ count.value }}
+                    </h4>
+                    <p>Unassigned</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <table id="studentTable">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Branch</th>
+                        <th>Year</th>
+                        <th>Gender</th>
+                        <th>Allocated Room</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in students %}
+                    <tr>
+                        <td><span class="student-id">{{ s.Student_ID }}</span></td>
+                        <td><strong>{{ s.Name }}</strong></td>
+                        <td>{{ s.Phone }}</td>
+                        <td><span class="badge-branch">{{ s.Branch }}</span></td>
+                        <td>{{ s.Year }} Year</td>
+                        <td>{{ s.Gender }}</td>
+                        <td>
+                            {% if s.Room_No != 'Not Assigned' %}
+                                <span class="badge-room"><i class="fa-solid fa-door-open"></i> {{ s.Room_No }} ({{ s.Hostel_No }})</span>
+                            {% else %}
+                                <span class="badge-unassigned"><i class="fa-solid fa-clock"></i> Not Assigned</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <!-- NEW MANAGE ROOM BUTTON -->
+                            <a href="{{ url_for('manual_allocate', student_id=s.Student_ID) }}" class="btn-action" style="background: #fef3c7; color: #d97706;" title="Manage Room Allocation">
+                                <i class="fa-solid fa-bed"></i> {% if s.Room_No == 'Not Assigned' %}Assign Room{% else %}Change Room{% endif %}
+                            </a>
+                            
+                            <!-- EXISTING BUTTONS -->
+                            <a href="{{ url_for('edit_student', student_id=s.Student_ID) }}" class="btn-action btn-edit" title="Edit Student Details">
+                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </a>
+                            {% if s.Room_No != 'Not Assigned' %}
+                            <a href="{{ url_for('unallocate_student', student_id=s.Student_ID) }}" class="btn-action btn-unallocate" title="Vacate Room" onclick="return confirm('Are you sure you want to vacate/un-allocate this student room?');">
+                                <i class="fa-solid fa-right-from-bracket"></i> Un-allocate
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" style="text-align: center; color: #64748b; padding: 40px;">
+                            <i class="fa-solid fa-users-slash" style="font-size: 2.2rem; color: #cbd5e1; display: block; margin-bottom: 12px;"></i>
+                            <span style="font-size: 0.95rem; font-weight: 500;">No registered students found in the database.</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function searchTable() {
+            let input = document.getElementById('searchInput');
+            let filter = input.value.toLowerCase();
+            let table = document.getElementById('studentTable');
+            let tr = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < tr.length; i++) {
+                let tdId = tr[i].getElementsByTagName('td')[0];
+                let tdName = tr[i].getElementsByTagName('td')[1];
+                let tdBranch = tr[i].getElementsByTagName('td')[3];
+
+                if (tdId || tdName || tdBranch) {
+                    let idText = tdId.textContent || tdId.innerText;
+                    let nameText = tdName.textContent || tdName.innerText;
+                    let branchText = tdBranch.textContent || tdBranch.innerText;
+
+                    if (idText.toLowerCase().indexOf(filter) > -1 || nameText.toLowerCase().indexOf(filter) > -1 || branchText.toLowerCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

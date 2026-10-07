@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Support & Grievances - Student Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+        body{ background: #f8fafc; display: flex; min-height: 100vh; }
+        .sidebar{ width: 260px; background: #0f172a; color: white; display: flex; flex-direction: column; padding: 20px; }
+        .sidebar h2{ font-size: 1.2rem; margin-bottom: 30px; text-align: center; color: #38bdf8; }
+        .sidebar a{ color: #cbd5e1; text-decoration: none; padding: 12px 15px; border-radius: 8px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; transition: 0.2s; }
+        .sidebar a:hover, .sidebar a.active{ background: #1e293b; color: white; }
+        .main-content{ flex: 1; padding: 30px; overflow-y: auto; }
+        .header{ margin-bottom: 25px; }
+        .header h1{ color: #0f172a; font-size: 1.8rem; }
+        .card{ background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .form-group{ margin-bottom: 15px; }
+        .form-group label{ display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 6px; }
+        .form-control{ width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none; }
+        .form-control:focus{ border-color: #0284c7; }
+        textarea.form-control{ resize: vertical; height: 100px; }
+        .btn{ padding: 10px 20px; background: #0284c7; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .btn:hover{ background: #0369a1; }
+        .alert{ padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 15px; background: #dcfce7; color: #166534; }
+        table{ width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td{ padding: 12px 14px; text-align: left; font-size: 0.9rem; border-bottom: 1px solid #f1f5f9; }
+        th{ background: #f8fafc; color: #475569; font-weight: 600; }
+        .badge{ padding: 5px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .badge-open{ background: #fef3c7; color: #92400e; }
+        .badge-resolved{ background: #dcfce7; color: #166534; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>🎓 Student Portal</h2>
+        <a href="{{ url_for('student_dashboard') }}"><i class="fa-solid fa-house"></i> Dashboard</a>
+        <a href="{{ url_for('request_room') }}"><i class="fa-solid fa-bed"></i> Request Room</a>
+        <a href="{{ url_for('student_support') }}" class="active"><i class="fa-solid fa-headset"></i> Support & Grievances</a>
+        <a href="{{ url_for('student_profile') }}"><i class="fa-solid fa-user-gear"></i> Profile</a>
+        <a href="{{ url_for('logout') }}" style="margin-top: auto; background: rgba(239, 68, 68, 0.1); color: #f87171;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Help, Support & Grievances</h1>
+        </div>
+
+        <div class="card">
+           <h3 style="margin-bottom: 15px; color: #0f172a; font-size: 1.1rem;">Submit a Ticket or Grievance</h3>
+            {% if message %}
+                <div class="alert">{{ message }}</div>
+            {% endif %}
+            
+            <!-- NEW: Added error display so failures do not happen silently -->
+            {% if error %}
+                <div class="alert" style="background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;">
+                    <i class="fa-solid fa-triangle-exclamation"></i> {{ error }}
+                </div>
+            {% endif %}
+            
+            <form method="POST">
+                <div class="form-group">
+                    <label>Subject / Issue Type</label>
+                    <input type="text" name="subject" class="form-control" placeholder="e.g., Room Maintenance / Mess Issue" required>
+                </div>
+                <div class="form-group">
+                    <label>Detailed Message</label>
+                    <textarea name="message" class="form-control" placeholder="Describe your grievance or issue clearly..." required></textarea>
+                </div>
+                <button type="submit" class="btn"><i class="fa-solid fa-paper-plane"></i> Submit Grievance</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-bottom: 15px; color: #0f172a; font-size: 1.1rem;">Your Grievance History</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ticket ID</th>
+                        <th>Subject</th>
+                        <th>Message</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in tickets %}
+                    <tr>
+                        <td>#{{ t.Ticket_ID }}</td>
+                        <td>{{ t.Subject }}</td>
+                        <td>{{ t.Message }}</td>
+                        <td>
+                            {% if t.Status == 'Open' %}
+                                <span class="badge badge-open">Open</span>
+                            {% else %}
+                                <span class="badge badge-resolved">Resolved</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #64748b; padding: 20px;">You haven't submitted any grievances yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

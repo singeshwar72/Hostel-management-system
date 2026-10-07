@@ -1,0 +1,236 @@
+{% extends 'base.html' %} 
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+    .allocate-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 75vh;
+        padding: 20px;
+    }
+    
+    .card-allocate {
+        background: #ffffff;
+        padding: 45px;
+        border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+        width: 100%;
+        max-width: 650px;
+        border: 1px solid #e2e8f0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Top glowing accent bar */
+    .card-allocate::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 5px;
+        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    }
+
+    .card-allocate h2 {
+        color: #0f172a;
+        margin-bottom: 8px;
+        font-size: 1.6rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+    
+    .card-allocate h2 i {
+        color: #0284c7;
+        background: #e0f2fe;
+        padding: 12px;
+        border-radius: 14px;
+        font-size: 1.2rem;
+    }
+
+    .subtitle {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-bottom: 30px;
+    }
+    
+    .student-badge {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        padding: 20px;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .student-avatar {
+        width: 50px; height: 50px;
+        background: #e0f2fe; color: #0284c7;
+        border-radius: 12px;
+        display: grid; place-items: center;
+        font-size: 1.3rem; font-weight: 700;
+    }
+
+    .status-badge {
+        padding: 12px 18px;
+        border-radius: 12px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        margin-bottom: 25px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .status-assigned {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+    }
+    .status-unassigned {
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #fde68a;
+    }
+    
+    .form-group {
+        margin-bottom: 24px;
+    }
+    .form-group label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #475569;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 14px 18px;
+        border: 1.5px solid #cbd5e1;
+        border-radius: 14px;
+        font-size: 0.95rem;
+        outline: none;
+        background: #f8fafc;
+        color: #1e293b;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+    }
+    .form-control:focus {
+        border-color: #0284c7;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15);
+    }
+    
+    .btn-group {
+        display: flex;
+        gap: 15px;
+        margin-top: 35px;
+    }
+    .btn {
+        flex: 1;
+        padding: 14px;
+        border: none;
+        border-radius: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        font-size: 0.95rem;
+        color: white;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    .btn-submit {
+        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+        box-shadow: 0 10px 20px rgba(2, 132, 199, 0.3);
+    }
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 25px rgba(2, 132, 199, 0.4);
+        filter: brightness(1.1);
+    }
+    .btn-cancel {
+        background: #64748b;
+        box-shadow: 0 10px 20px rgba(100, 116, 139, 0.2);
+    }
+    .btn-cancel:hover {
+        transform: translateY(-2px);
+        background: #475569;
+    }
+    
+    .alert-error {
+        background: rgba(239, 68, 68, 0.1);
+        color: #dc2626;
+        padding: 14px 18px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        font-size: 0.88rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+</style>
+
+<div class="allocate-wrapper">
+    <div class="card-allocate">
+        <h2><i class="fa-solid fa-door-open"></i> Room Assignment Hub</h2>
+        <p class="subtitle">Directly allocate or transfer a specific hostel room for this resident.</p>
+        
+        <div class="student-badge">
+            <div class="student-avatar"><i class="fa-solid fa-user-graduate"></i></div>
+            <div>
+                <div style="font-size: 0.75rem; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Target Resident</div>
+                <div style="font-size: 1.15rem; font-weight: 700; color: #0f172a;">{{ student.Name }}</div>
+                <div style="font-size: 0.85rem; color: #475569; font-weight: 500;">ID: {{ student.Student_ID }}</div>
+            </div>
+        </div>
+
+        {% if current_allocation %}
+            <div class="status-badge status-assigned">
+                <i class="fa-solid fa-circle-check" style="font-size: 1.1rem;"></i> 
+                <span>Active Assignment: <strong>Room {{ current_allocation.Room_No }}</strong> ({{ current_allocation.Hostel_No }})</span>
+            </div>
+        {% else %}
+            <div class="status-badge status-unassigned">
+                <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.1rem;"></i> 
+                <span>Status: <strong>Unassigned</strong> (Ready for placement)</span>
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div class="alert-error"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <div class="form-group">
+                <label><i class="fa-solid fa-building-user"></i> Select Vacant Room & Block</label>
+                <select name="new_room" class="form-control" required>
+                    <option value="" disabled selected>-- Choose from available rooms --</option>
+                    {% for room in available_rooms %}
+                        <option value="{{ room.Room_No }}|{{ room.Hostel_No }}">
+                            {{ room.Hostel_No }} &bull; Room {{ room.Room_No }} ({{ room.Capacity - room.Current_Occupancy }} bed(s) free)
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="btn-group">
+                <button type="submit" class="btn btn-submit"><i class="fa-solid fa-check-to-slot"></i> Save Assignment</button>
+                <a href="{{ url_for('registered_students') }}" class="btn btn-cancel"><i class="fa-solid fa-arrow-left"></i> Go Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Support Inbox - Official Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+        body{ background: #f8fafc; display: flex; min-height: 100vh; }
+        .sidebar{ width: 260px; background: #1e1b4b; color: white; display: flex; flex-direction: column; padding: 20px; }
+        .sidebar h2{ font-size: 1.2rem; margin-bottom: 30px; text-align: center; color: #818cf8; }
+        .sidebar a{ color: #cbd5e1; text-decoration: none; padding: 12px 15px; border-radius: 8px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; transition: 0.2s; }
+        .sidebar a:hover, .sidebar a.active{ background: #312e81; color: white; }
+        .main-content{ flex: 1; padding: 30px; overflow-y: auto; }
+        .header{ margin-bottom: 25px; }
+        .header h1{ color: #1e1b4b; font-size: 1.8rem; }
+        .card{ background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        table{ width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td{ padding: 12px 14px; text-align: left; font-size: 0.9rem; border-bottom: 1px solid #f1f5f9; }
+        th{ background: #f8fafc; color: #475569; font-weight: 600; }
+        .badge{ padding: 5px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .badge-open{ background: #fef3c7; color: #92400e; }
+        .badge-resolved{ background: #dcfce7; color: #166534; }
+        .btn{ padding: 6px 12px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; text-decoration: none; font-size: 0.8rem; background: #10b981; color: white; display: inline-flex; align-items: center; gap: 5px; }
+        .btn:hover{ background: #059669; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>🏛️ Official Portal</h2>
+        <a href="{{ url_for('official_dashboard') }}"><i class="fa-solid fa-house"></i> Dashboard</a>
+        <a href="{{ url_for('registered_students') }}"><i class="fa-solid fa-users"></i> Registered Students</a>
+        <a href="{{ url_for('rooms_chart') }}"><i class="fa-solid fa-bed"></i> Room Status</a>
+        <a href="{{ url_for('support_inbox') }}" class="active"><i class="fa-solid fa-headset"></i> Support Inbox</a>
+        <a href="{{ url_for('official_profile') }}"><i class="fa-solid fa-user-gear"></i> Profile</a>
+        <a href="{{ url_for('logout') }}" style="margin-top: auto; background: rgba(239, 68, 68, 0.1); color: #f87171;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Student Support & Grievances Inbox</h1>
+        </div>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ticket ID</th>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Subject</th>
+                        <th>Message</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in tickets %}
+                    <tr>
+                        <td>#{{ t.Ticket_ID }}</td>
+                        <td><strong>{{ t.Student_ID }}</strong></td>
+                        <td>{{ t.Student_Name }} ({{ t.Branch }})</td>
+                        <td>{{ t.Subject }}</td>
+                        <td>{{ t.Message }}</td>
+                        <td>
+                            {% if t.Status == 'Open' %}
+                                <span class="badge badge-open">Open</span>
+                            {% else %}
+                                <span class="badge badge-resolved">Resolved</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if t.Status == 'Open' %}
+                            <a href="{{ url_for('resolve_ticket', ticket_id=t.Ticket_ID) }}" class="btn">
+                                <i class="fa-solid fa-check"></i> Mark Resolved
+                            </a>
+                            {% else %}
+                            <span style="color: #64748b; font-size: 0.8rem;">Closed</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: #64748b; padding: 20px;">No support messages found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

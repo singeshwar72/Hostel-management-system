@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration | BCE Hostel</title>
+    <!-- Professional Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --brand-primary: #1e3a8a;
+            --brand-secondary: #3b82f6;
+            --text-dark: #0f172a;
+            --text-light: #64748b;
+            --bg-white: #ffffff;
+            --bg-gray: #f8fafc;
+            --success-bg: #dcfce7;
+            --success-text: #166534;
+            --error-bg: #fef2f2;
+            --error-text: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            background-color: var(--bg-white);
+            overflow: hidden; /* Prevent body scroll, panels scroll independently */
+        }
+
+        /* =========================================
+           LEFT PANEL: BRANDING & FEATURES
+        ========================================= */
+        .info-panel {
+            flex: 1.2;
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #0f172a 100%);
+            color: white;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .info-panel::before {
+            content: '';
+            position: absolute;
+            top: -10%; left: -10%;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulseBg 8s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulseBg {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.2) translate(20px, 20px); }
+        }
+
+        .info-content {
+            position: relative;
+            z-index: 10;
+            max-width: 550px;
+        }
+
+        /* Circular Logo Wrapper */
+        .logo-wrapper {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 4px solid white;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-wrapper:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        .bce-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .info-content h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .info-content p {
+            color: #94a3b8;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 18px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .feature-icon {
+            width: 36px; height: 36px;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--brand-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .feature-card h3 {
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            line-height: 1.4;
+        }
+
+        /* =========================================
+           RIGHT PANEL: REGISTRATION FORM 
+        ========================================= */
+        .register-panel {
+            flex: 1;
+            background: var(--bg-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            height: 100vh;
+            overflow-y: auto; /* Allows form to scroll if screen is small */
+            scrollbar-width: thin;
+        }
+
+        .register-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+        .register-panel::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .register-wrapper {
+            width: 100%;
+            max-width: 440px;
+            animation: slideInRight 0.6s ease-out forwards;
+            padding: 20px 0; /* Buffer for scrolling */
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .register-header {
+            margin-bottom: 30px;
+        }
+
+        .register-header h2 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .register-header p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* Alert Boxes */
+        .alert-success {
+            background: var(--success-bg);
+            color: var(--success-text);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+            border: 1px solid #bbf7d0;
+        }
+
+        .alert-error {
+            background: var(--error-bg);
+            color: var(--error-text);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+            border: 1px solid #fca5a5;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1rem;
+            transition: color 0.3s;
+            pointer-events: none;
+        }
+
+        .form-control, select.form-control {
+            width: 100%;
+            background: var(--bg-gray);
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px 12px 42px; /* Space for icon */
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.3s ease;
+            appearance: none; /* Removes default OS styling for dropdowns */
+            -webkit-appearance: none;
+        }
+
+        /* Custom dropdown arrow for selects */
+        select.form-control {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: calc(100% - 16px) center;
+            cursor: pointer;
+        }
+
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-control:focus {
+            background: #ffffff;
+            border-color: var(--brand-secondary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-control:focus + .input-icon {
+            color: var(--brand-secondary);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 5px;
+        }
+
+        .toggle-password:hover {
+            color: var(--text-dark);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--brand-primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(30, 58, 138, 0.4);
+        }
+
+        .card-footer {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .card-footer a {
+            color: var(--brand-secondary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .card-footer a:hover {
+            text-decoration: underline;
+            color: var(--brand-primary);
+        }
+
+        @media (max-width: 960px) {
+            body { flex-direction: column; overflow-y: auto; }
+            .info-panel { padding: 40px 20px; flex: none; height: auto; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .register-panel { padding: 40px 20px; height: auto; overflow-y: visible; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Left Side: Student Information Panel -->
+    <div class="info-panel">
+        <div class="info-content">
+            <div class="logo-wrapper">
+                <img src="https://upload.wikimedia.org/wikipedia/en/6/68/Bakhtiyarpur_College_of_Engineering_Logo.png?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original" alt="BCE Logo" class="bce-logo">
+            </div>
+            
+            <h1>Student Onboarding</h1>
+            <p>Create your official BCE Hostel account to manage your accommodation, track fees, and streamline campus life.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-house-user"></i></div>
+                    <h3>Room Setup</h3>
+                    <p>Get instant access to your allocation details and roommate information.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                    <h3>Secure Payments</h3>
+                    <p>Track your mess dues and hostel fees with complete transparency.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Side: Registration Form -->
+    <div class="register-panel">
+        <div class="register-wrapper">
+            
+            <div class="register-header">
+                <h2>Create Account</h2>
+                <p>Register using your official college credentials.</p>
+            </div>
+
+            <!-- Flash Messages -->
+            {% if message %}
+                <div class="alert-success"><i class="fa-solid fa-circle-check"></i> {{ message }}</div>
+            {% endif %}
+            {% if error %}
+                <div class="alert-error"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>
+            {% endif %}
+
+            <form method="POST">
+                
+                <div class="form-group">
+                    <label>Student ID / Roll No</label>
+                    <div class="input-container">
+                        <input type="text" name="student_id" class="form-control" required placeholder="e.g. BCE/2026/042">
+                        <i class="fa-regular fa-id-badge input-icon"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <div class="input-container">
+                        <input type="text" name="name" class="form-control" required placeholder="Enter full name as per records">
+                        <i class="fa-regular fa-user input-icon"></i>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <div class="input-container">
+                            <input type="text" name="phone" class="form-control" required placeholder="+91 0000000000">
+                            <i class="fa-solid fa-phone input-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <div class="input-container">
+                            <select name="gender" class="form-control" required>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                            <i class="fa-solid fa-venus-mars input-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Branch</label>
+                        <div class="input-container">
+                            <select name="branch" class="form-control" required>
+                                <option value="" disabled selected>Select Branch</option>
+                                <option value="CSE">Computer Science</option>
+                                <option value="ECE">Electronics</option>
+                                <option value="EEE">Electrical</option>
+                                <option value="Civil">Civil</option>
+                                <option value="Mechanical">Mechanical</option>
+                            </select>
+                            <i class="fa-solid fa-code-branch input-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Year</label>
+                        <div class="input-container">
+                            <select name="year" class="form-control" required>
+                                <option value="" disabled selected>Select Year</option>
+                                <option value="1">1st Year</option>
+                                <option value="2">2nd Year</option>
+                                <option value="3">3rd Year</option>
+                                <option value="4">4th Year</option>
+                            </select>
+                            <i class="fa-regular fa-calendar-days input-icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Create Password</label>
+                    <div class="input-container">
+                        <input type="password" id="passwordField" name="password" class="form-control" required placeholder="••••••••">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <i class="fa-regular fa-eye toggle-password" id="togglePassword" onclick="togglePasswordVisibility()"></i>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    Complete Registration <i class="fa-solid fa-user-plus"></i>
+                </button>
+
+            </form>
+            
+            <div class="card-footer">
+                Already registered? <a href="\student_login.html">Log in here</a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById("passwordField");
+            const toggleIcon = document.getElementById("togglePassword");
+            
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.classList.remove("fa-eye");
+                toggleIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.classList.remove("fa-eye-slash");
+                toggleIcon.classList.add("fa-eye");
+            }
+        }
+    </script>
+</body>
+</html>

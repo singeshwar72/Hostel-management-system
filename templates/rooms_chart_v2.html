@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Rooms | BCE Hostel{% endblock %}
+{% block page_title %}Room Availability{% endblock %}
+{% block page_subtitle %}Review room occupancy hostel-wise, with full rooms highlighted separately.{% endblock %}
+{% block extra_style %}
+<style>
+.hostel-nav{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}.hostel-nav a{text-decoration:none}.hostel-nav a.active,.hostel-nav a:hover{background:var(--primary);color:#fff}.hostel-section{margin-bottom:24px;scroll-margin-top:18px}.hostel-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.hostel-heading h2{margin:0}.full-list{display:flex;flex-wrap:wrap;gap:8px;padding:12px;border:1px solid #ffd4d4;border-radius:10px;background:#fff7f7;margin-bottom:14px}.full-room{padding:7px 10px;border-radius:8px;background:#ffe2e2;color:#a12020;font-weight:700;font-size:.88rem}.no-full{color:#258253;font-weight:600}.room-count{font-size:.86rem;color:var(--muted)}
+</style>
+{% endblock %}
+{% block content %}
+<nav class="hostel-nav" aria-label="Hostel room navigation">
+  {% for hostel in rooms_by_hostel %}<a class="button secondary" href="#{{ hostel|replace(' ', '-')|lower }}"><i class="fa-solid fa-building"></i> {{ hostel }} rooms</a>{% endfor %}
+</nav>
+{% for hostel, hostel_rooms in rooms_by_hostel.items() %}
+<section class="panel hostel-section" id="{{ hostel|replace(' ', '-')|lower }}">
+  <div class="hostel-heading"><h2><i class="fa-solid fa-building" style="color:var(--primary)"></i> {{ hostel }}</h2><span class="room-count">{{ hostel_rooms|length }} rooms</span></div>
+  <h3 style="margin:0 0 8px;font-size:1rem"><i class="fa-solid fa-ban" style="color:#c43a3a"></i> Fully occupied rooms</h3>
+  {% set full_rooms = full_rooms_by_hostel.get(hostel, []) %}
+  {% if full_rooms %}<div class="full-list">{% for room in full_rooms %}<span class="full-room">Room {{ room.Room_No }} · {{ room.Current_Occupancy }}/{{ room.Capacity }}</span>{% endfor %}</div>{% else %}<div class="full-list"><span class="no-full"><i class="fa-solid fa-circle-check"></i> No fully occupied rooms in {{ hostel }}.</span></div>{% endif %}
+  <div class="table-wrap"><table><thead><tr><th>Room</th><th>Capacity</th><th>Occupied</th><th>Vacancy</th><th>Status</th></tr></thead><tbody>{% for room in hostel_rooms %}{% set vacant = room.Capacity - room.Current_Occupancy %}<tr><td><strong>{{ room.Room_No }}</strong></td><td>{{ room.Capacity }}</td><td>{{ room.Current_Occupancy }}</td><td>{{ vacant }}</td><td><span class="badge {% if vacant == 0 %}danger{% elif room.Current_Occupancy > 0 %}warning{% else %}success{% endif %}">{% if vacant == 0 %}Full{% elif room.Current_Occupancy > 0 %}Partly occupied{% else %}Vacant{% endif %}</span></td></tr>{% endfor %}</tbody></table></div>
+</section>
+{% else %}<section class="panel"><p class="empty">No rooms have been configured.</p></section>{% endfor %}
+{% endblock %}

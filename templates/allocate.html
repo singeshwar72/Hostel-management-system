@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+.page-header{
+    margin-bottom:30px;
+}
+
+.page-header h2{
+    font-size:30px;
+    color:#1e293b;
+    font-weight:700;
+}
+
+.page-header p{
+    color:#64748b;
+    margin-top:6px;
+}
+
+.assign-card{
+
+    max-width:500px;
+    margin:auto;
+
+    background:#fff;
+
+    border-radius:20px;
+
+    padding:35px;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.08);
+
+    animation:fadeIn .5s ease;
+
+}
+
+.input-group{
+
+    margin-top:25px;
+
+}
+
+.input-group label{
+
+    display:block;
+
+    margin-bottom:10px;
+
+    color:#334155;
+
+    font-weight:600;
+
+}
+
+.input-box{
+
+    position:relative;
+
+}
+
+.input-box i{
+
+    position:absolute;
+
+    left:18px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    color:#3b82f6;
+
+}
+
+.input-box input{
+
+    width:100%;
+
+    padding:15px 15px 15px 48px;
+
+    border:2px solid #e2e8f0;
+
+    border-radius:12px;
+
+    font-size:16px;
+
+    transition:.3s;
+
+    outline:none;
+
+}
+
+.input-box input:focus{
+
+    border-color:#2563eb;
+
+    box-shadow:0 0 10px rgba(37,99,235,.15);
+
+}
+
+.assign-btn{
+
+    width:100%;
+
+    margin-top:30px;
+
+    border:none;
+
+    padding:15px;
+
+    border-radius:12px;
+
+    background:linear-gradient(135deg,#2563eb,#3b82f6);
+
+    color:white;
+
+    font-size:17px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.assign-btn:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 12px 25px rgba(37,99,235,.3);
+
+}
+
+.message{
+
+    margin-top:25px;
+
+    padding:15px;
+
+    border-radius:12px;
+
+    background:#dcfce7;
+
+    color:#166534;
+
+    border-left:5px solid #22c55e;
+
+    animation:fadeIn .4s;
+
+}
+
+@keyframes fadeIn{
+
+from{
+opacity:0;
+transform:translateY(20px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+</style>
+
+<div class="page-header">
+
+    <h2>
+        <i class="fa-solid fa-bed"></i>
+        Assign Hostel Room
+    </h2>
+
+    <p>Allocate a room to the selected student.</p>
+
+</div>
+
+<form method="POST" class="assign-card">
+
+    <div class="input-group">
+
+        <label>Room Number</label>
+
+        <div class="input-box">
+
+            <i class="fa-solid fa-door-open"></i>
+
+            <input
+                type="text"
+                name="room_no"
+                placeholder="Enter Room Number (e.g. 101)"
+                required>
+
+        </div>
+
+    </div>
+
+    <button type="submit" class="assign-btn">
+        <i class="fa-solid fa-check"></i>
+        Assign Room
+    </button>
+
+    {% if message %}
+    <div class="message">
+        <i class="fa-solid fa-circle-check"></i>
+        {{ message }}
+    </div>
+    {% endif %}
+
+</form>
+
+{% endblock %}

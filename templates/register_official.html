@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Official Registration - Hostel Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+        body{ background: #0b0f19; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; color: #1e293b; }
+        
+        .auth-container{ display: grid; grid-template-columns: 1fr 1.1fr; width: 100%; max-width: 950px; background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); }
+        @media(max-width: 768px){ .auth-container{ grid-template-columns: 1fr; } .auth-banner{ display: none; } }
+
+        .auth-banner{ background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 50px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
+        .auth-banner h2{ font-size: 1.8rem; font-weight: 700; color: #38bdf8; margin-bottom: 10px; }
+        .auth-banner p{ font-size: 0.9rem; color: #94a3b8; line-height: 1.6; }
+        .banner-badge{ background: rgba(56, 189, 248, 0.15); color: #38bdf8; padding: 8px 16px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(56, 189, 248, 0.3); width: fit-content; }
+
+        .auth-form-side{ padding: 40px 50px; display: flex; flex-direction: column; justify-content: center; }
+        .auth-form-side h3{ font-size: 1.4rem; color: #0f172a; font-weight: 700; margin-bottom: 4px; }
+        .auth-form-side p{ font-size: 0.82rem; color: #64748b; margin-bottom: 20px; }
+        
+        .form-group{ margin-bottom: 15px; }
+        .form-group label{ display: block; font-size: 0.8rem; font-weight: 600; color: #334155; margin-bottom: 5px; }
+        .input-box{ position: relative; }
+        .input-box i{ position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.85rem; }
+        .form-control{ width: 100%; padding: 10px 14px 10px 40px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 0.88rem; outline: none; background: #f8fafc; transition: 0.2s; }
+        .form-control:focus{ border-color: #0284c7; background: white; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1); }
+        
+        .btn-auth{ width: 100%; padding: 12px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.9rem; box-shadow: 0 4px 15px rgba(15, 23, 42, 0.3); transition: 0.2s; margin-top: 5px; }
+        .btn-auth:hover{ transform: translateY(-2px); box-shadow: 0 6px 20px rgba(15, 23, 42, 0.4); }
+        
+        .auth-footer{ margin-top: 20px; text-align: center; font-size: 0.82rem; color: #64748b; }
+        .auth-footer a{ color: #0284c7; text-decoration: none; font-weight: 600; }
+        .auth-footer a:hover{ text-decoration: underline; }
+        
+        .alert-error{ padding: 10px 14px; border-radius: 10px; font-size: 0.82rem; margin-bottom: 15px; background: #fee2e2; color: #991b1b; display: flex; align-items: center; gap: 8px; border: 1px solid #fecaca; }
+        .alert-success{ padding: 10px 14px; border-radius: 10px; font-size: 0.82rem; margin-bottom: 15px; background: #dcfce7; color: #166534; display: flex; align-items: center; gap: 8px; border: 1px solid #bbf7d0; }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-banner">
+            <div>
+                <div class="banner-badge"><i class="fa-solid fa-user-plus"></i> Staff Registration</div>
+            </div>
+            <div>
+                <h2>Join Administrative Panel</h2>
+                <p>Register a verified official account using your security authorization passkey.</p>
+            </div>
+            <div style="font-size: 0.78rem; color: #64748b;">
+                &copy; 2026 Campus Housing Infrastructure
+            </div>
+        </div>
+
+        <div class="auth-form-side">
+            <h3>Create Official Account</h3>
+            <p>Fill in your credentials and security passkey.</p>
+
+            {% if error %}
+                <div class="alert-error"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>
+            {% endif %}
+            {% if message %}
+                <div class="alert-success"><i class="fa-solid fa-circle-check"></i> {{ message }}</div>
+            {% endif %}
+
+            <form method="POST">
+                <div class="form-group">
+                    <label>Staff ID</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-id-badge"></i>
+                        <input type="text" name="user_id" class="form-control" placeholder="Enter staff ID" required autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Staff Secret Passkey</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-key"></i>
+                        <input type="password" name="secret_code" class="form-control" placeholder="Enter security passkey" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-auth"><i class="fa-solid fa-user-check"></i> Register Official Account</button>
+            </form>
+
+            <div class="auth-footer">
+                Already registered? <a href="{{ url_for('login') }}">Sign In</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

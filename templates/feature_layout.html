@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Hostel Portal{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root { --primary:#2563eb; --nav:#172033; --text:#1e293b; --muted:#64748b; --surface:#fff; --line:#e2e8f0; --bg:#f1f5f9; --success:#15803d; --danger:#b91c1c; --warning:#b45309; }
+        * { box-sizing:border-box; }
+        body { margin:0; background:var(--bg); color:var(--text); font:14px 'Poppins',sans-serif; display:flex; min-height:100vh; }
+        .sidebar { width:250px; background:var(--nav); color:white; padding:28px 16px; display:flex; flex-direction:column; gap:8px; position:fixed; inset:0 auto 0 0; overflow-y:auto; }
+        .brand { padding:0 12px 24px; border-bottom:1px solid #334155; margin-bottom:10px; font-size:18px; font-weight:700; }
+        .brand small { display:block; color:#93c5fd; font-size:11px; letter-spacing:.08em; margin-top:4px; }
+        .nav-link { color:#cbd5e1; text-decoration:none; padding:10px 12px; border-radius:9px; display:flex; gap:11px; align-items:center; }
+        .nav-link:hover { background:#25324a; color:white; }
+        .nav-link i { width:18px; text-align:center; }
+        .logout { color:#fecaca; margin-top:auto; }
+        .page { margin-left:250px; width:calc(100% - 250px); padding:34px; }
+        .page-head { margin-bottom:24px; }
+        h1 { margin:0; font-size:26px; }
+        h2 { font-size:18px; margin:0 0 18px; }
+        .subtitle { color:var(--muted); margin:6px 0 0; }
+        .panel { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:22px; margin-bottom:20px; box-shadow:0 4px 14px rgba(15,23,42,.04); }
+        .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:20px; align-items:start; }
+        .field { margin-bottom:14px; }
+        label { display:block; font-weight:600; margin-bottom:6px; }
+        input, select, textarea { width:100%; border:1px solid #cbd5e1; border-radius:8px; padding:10px; color:var(--text); font:inherit; background:white; }
+        textarea { min-height:90px; resize:vertical; }
+        button, .button { border:0; display:inline-block; border-radius:8px; background:var(--primary); color:white; padding:10px 14px; font:600 13px 'Poppins',sans-serif; cursor:pointer; text-decoration:none; }
+        button:hover, .button:hover { filter:brightness(.93); }
+        .button.danger, button.danger { background:var(--danger); }
+        .button.secondary { background:#475569; }
+        .alert { border-radius:9px; padding:12px 14px; margin-bottom:18px; }
+        .alert.success { color:#166534; background:#dcfce7; }
+        .alert.error { color:#991b1b; background:#fee2e2; }
+        .table-wrap { overflow-x:auto; }
+        table { width:100%; border-collapse:collapse; min-width:680px; }
+        th, td { padding:12px 10px; vertical-align:top; text-align:left; border-bottom:1px solid var(--line); }
+        th { color:#475569; background:#f8fafc; font-size:12px; text-transform:uppercase; letter-spacing:.03em; }
+        .badge { display:inline-block; padding:4px 8px; border-radius:999px; background:#e0e7ff; color:#3730a3; font-weight:600; font-size:11px; }
+        .badge.success { background:#dcfce7; color:#166534; }.badge.warning { background:#fef3c7; color:#92400e; }.badge.danger { background:#fee2e2; color:#991b1b; }
+        .muted { color:var(--muted); }.small { font-size:12px; }.empty { text-align:center; padding:28px; color:var(--muted); }
+        .inline-form { display:flex; flex-wrap:wrap; gap:8px; align-items:end; }.inline-form .field { flex:1 1 120px; margin:0; }.inline-form input, .inline-form select { padding:7px; }
+        .notice { border-left:4px solid var(--primary); padding:15px 16px; background:#f8fafc; margin-bottom:12px; border-radius:0 8px 8px 0; }.notice h3 { margin:0 0 5px; font-size:16px; }.notice p { white-space:pre-wrap; margin:8px 0; }
+        @media (max-width:800px) { body{display:block}.sidebar{position:static;width:100%;flex-direction:row;flex-wrap:wrap}.brand{width:100%;padding-bottom:12px}.logout{margin-top:0}.page{margin:0;width:100%;padding:20px}.nav-link{padding:8px}.nav-link span{display:none} }
+    </style>
+    {% block extra_style %}{% endblock %}
+</head>
+<body>
+    <aside class="sidebar">
+        {% if portal == 'official' %}
+            <div class="brand">BCE Hostel <small>OFFICIAL PORTAL</small></div>
+            <a class="nav-link" href="{{ url_for('official_dashboard') }}"><i class="fa-solid fa-chart-line"></i><span>Dashboard</span></a>
+            <a class="nav-link" href="{{ url_for('manage_notices') }}"><i class="fa-solid fa-bullhorn"></i><span>Notices</span></a>
+            <a class="nav-link" href="{{ url_for('fee_management') }}"><i class="fa-solid fa-indian-rupee-sign"></i><span>Fee Management</span></a>
+            <a class="nav-link" href="{{ url_for('maintenance_complaints') }}"><i class="fa-solid fa-screwdriver-wrench"></i><span>Maintenance</span></a>
+            <a class="nav-link" href="{{ url_for('support_inbox') }}"><i class="fa-solid fa-headset"></i><span>Support Inbox</span></a>
+            <a class="nav-link logout" href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+        {% else %}
+            <div class="brand">BCE Hostel <small>STUDENT PORTAL</small></div>
+            <a class="nav-link" href="{{ url_for('student_dashboard') }}"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+            <a class="nav-link" href="{{ url_for('request_room') }}"><i class="fa-solid fa-bed"></i><span>Request Room</span></a>
+            <a class="nav-link" href="{{ url_for('student_notices') }}"><i class="fa-solid fa-bullhorn"></i><span>Notices</span></a>
+            <a class="nav-link" href="{{ url_for('student_fees') }}"><i class="fa-solid fa-indian-rupee-sign"></i><span>My Fees</span></a>
+            <a class="nav-link" href="{{ url_for('submit_maintenance') }}"><i class="fa-solid fa-screwdriver-wrench"></i><span>Maintenance</span></a>
+            <a class="nav-link" href="{{ url_for('emergency_contacts') }}"><i class="fa-solid fa-phone-volume"></i><span>Emergency Contacts</span></a>
+            <a class="nav-link" href="{{ url_for('student_support') }}"><i class="fa-solid fa-headset"></i><span>Support</span></a>
+            <a class="nav-link logout" href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a>
+        {% endif %}
+    </aside>
+    <main class="page">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

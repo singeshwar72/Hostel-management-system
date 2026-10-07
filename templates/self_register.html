@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Registration - BCE Hostel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+        body{ background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .card{ background: rgba(255, 255, 255, 0.95); padding: 35px; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); width: 450px; }
+        h2{ color: #1e1b4b; text-align: center; margin-bottom: 5px; font-weight: 700; }
+        p{ color: #64748b; text-align: center; font-size: 0.9rem; margin-bottom: 20px; }
+        .form-group{ margin-bottom: 15px; }
+        label{ display: block; font-weight: 600; margin-bottom: 5px; color: #334155; font-size: 0.85rem; }
+        input, select{ width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; box-sizing: border-box; }
+        input:focus, select:focus{ outline: none; border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); }
+        .password-container{ position: relative; }
+        .password-container i{ position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b; }
+        button{ width: 100%; background: #4f46e5; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; margin-top: 10px; transition: background 0.2s; }
+        button:hover{ background: #4338ca; }
+        .alert-success{ background: #dcfce7; color: #166534; padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 0.85rem; font-weight: 600; }
+        .alert-error{ background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 0.85rem; font-weight: 600; }
+        .footer-link{ text-align: center; margin-top: 15px; font-size: 0.85rem; color: #64748b; }
+        .footer-link a{ color: #4f46e5; text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🎓 Student Signup</h2>
+        <p>Bakhtiyarpur College of Engineering</p>
+        
+        {% if message %}
+            <div class="alert-success">{{ message }}</div>
+        {% endif %}
+        {% if error %}
+            <div class="alert-error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <div class="form-group">
+                <label>Student ID / Roll No:</label>
+                <input type="text" name="student_id" required placeholder="Enter unique ID">
+            </div>
+            <div class="form-group">
+                <label>Full Name:</label>
+                <input type="text" name="name" required placeholder="Enter full name">
+            </div>
+            <div class="form-group">
+                <label>Phone Number:</label>
+                <input type="text" name="phone" required placeholder="+91 9876543210">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="form-group">
+                    <label>Branch:</label>
+                    <select name="branch" required>
+                        <option value="CSE">CSE</option>
+                        <option value="ECE">ECE</option>
+                        <option value="EEE">EEE</option>
+                        <option value="Civil">Civil</option>
+                        <option value="Mechanical">Mechanical</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Year:</label>
+                    <select name="year" required>
+                        <option value="1">1st Year</option>
+                        <option value="2">2nd Year</option>
+                        <option value="3">3rd Year</option>
+                        <option value="4">4th Year</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Gender:</label>
+                <select name="gender" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <div class="password-container">
+                    <input type="password" id="passwordField" name="password" required placeholder="Create password">
+                    <i class="fa-solid fa-eye" id="togglePassword" onclick="togglePasswordVisibility()"></i>
+                </div>
+            </div>
+            <button type="submit">Complete Registration</button>
+        </form>
+        <div class="footer-link">
+            Already registered? <a href="/student_login">Login here</a>
+        </div>
+    </div>
+
+    <script>
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById("passwordField");
+            const toggleIcon = document.getElementById("togglePassword");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.classList.remove("fa-eye");
+                toggleIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.classList.remove("fa-eye-slash");
+                toggleIcon.classList.add("fa-eye");
+            }
+        }
+    </script>
+</body>
+</html>

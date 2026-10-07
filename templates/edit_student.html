@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Student - Official Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+        body{ background: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .card{ background: white; padding: 35px; border-radius: 16px; width: 100%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .card h2{ color: #1e1b4b; margin-bottom: 20px; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+        .form-group{ margin-bottom: 15px; }
+        .form-group label{ display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 6px; }
+        .form-control{ width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none; }
+        .btn-group{ display: flex; gap: 10px; margin-top: 20px; }
+        .btn{ flex: 1; padding: 12px; background: #4f46e5; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; text-align: center; text-decoration: none; }
+        .btn:hover{ background: #4338ca; }
+        .btn-back{ background: #64748b; }
+        .btn-back:hover{ background: #475569; }
+        .alert{ padding: 10px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 15px; background: #dcfce7; color: #166534; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2><i class="fa-solid fa-user-pen"></i> Edit Student Details</h2>
+        {% if message %}
+            <div class="alert"><i class="fa-solid fa-circle-check"></i> {{ message }}</div>
+        {% endif %}
+        <form method="POST">
+            <div class="form-group">
+                <label>Student ID (Read-only)</label>
+                <input type="text" class="form-control" value="{{ student.Student_ID }}" disabled>
+            </div>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="name" class="form-control" value="{{ student.Name }}" required>
+            </div>
+            <div class="form-group">
+                <label>Branch</label>
+                <input type="text" name="branch" class="form-control" value="{{ student.Branch }}" required>
+            </div>
+            <div class="form-group">
+                <label>Year</label>
+                <input type="number" name="year" class="form-control" min="1" max="4" value="{{ student.Year }}" required>
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" name="phone" class="form-control" value="{{ student.Phone }}" required>
+            </div>
+            <div class="form-group">
+                <label>Gender</label>
+                <select name="gender" class="form-control" required>
+                    <option value="Male" {% if student.Gender == 'Male' %}selected{% endif %}>Male</option>
+                    <option value="Female" {% if student.Gender == 'Female' %}selected{% endif %}>Female</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <button type="submit" class="btn"><i class="fa-solid fa-floppy-disk"></i> Update</button>
+                <a href="{{ url_for('registered_students') }}" class="btn btn-back">Back to Directory</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

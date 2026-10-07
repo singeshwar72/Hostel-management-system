@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCE Hostel | Admin Portal</title>
+    <!-- Professional Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --brand-primary: #1e3a8a; /* Deep Corporate Navy */
+            --brand-secondary: #3b82f6; /* Bright Blue */
+            --brand-accent: #f59e0b; /* BCE Yellow/Gold */
+            --text-dark: #0f172a;
+            --text-light: #64748b;
+            --bg-white: #ffffff;
+            --bg-gray: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            background-color: var(--bg-white);
+            overflow-x: hidden;
+        }
+
+        /* =========================================
+           LEFT PANEL: ABOUT & INFORMATION 
+        ========================================= */
+        .info-panel {
+            flex: 1.2;
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #0f172a 100%);
+            color: white;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Interactive Background Elements */
+        .info-panel::before {
+            content: '';
+            position: absolute;
+            top: -10%; left: -10%;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulseBg 8s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulseBg {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.2) translate(20px, 20px); }
+        }
+
+        .info-content {
+            position: relative;
+            z-index: 10;
+            max-width: 550px;
+        }
+
+        /* Perfectly Circular Logo Wrapper */
+        .logo-wrapper {
+            width: 110px;
+            height: 110px;
+            background: white;
+            border-radius: 50%;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Clips any square edges of the image */
+            border: 4px solid white; /* Creates a clean border */
+            transition: transform 0.3s ease;
+        }
+
+        .logo-wrapper:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        .bce-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Forces the image to fill the perfect circle */
+            border-radius: 50%;
+        }
+
+        .info-content h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .info-content p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        /* Interactive Feature Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .feature-icon {
+            width: 40px; height: 40px;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--brand-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+
+        .feature-card h3 {
+            font-size: 1rem;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        /* =========================================
+           RIGHT PANEL: LOGIN FORM 
+        ========================================= */
+        .login-panel {
+            flex: 1;
+            background: var(--bg-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 400px;
+            animation: slideInRight 0.6s ease-out forwards;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .login-header {
+            margin-bottom: 35px;
+        }
+
+        .login-header h2 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* Alert Box */
+        .alert {
+            background: #fef2f2;
+            color: #ef4444;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+            border: 1px solid #fca5a5;
+        }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .form-control {
+            width: 100%;
+            background: var(--bg-gray);
+            border: 1px solid #e2e8f0;
+            padding: 14px 16px 14px 44px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-control:hover {
+            border-color: #cbd5e1;
+        }
+
+        .form-control:focus {
+            background: #ffffff;
+            border-color: var(--brand-secondary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-control:focus + .input-icon {
+            color: var(--brand-secondary);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 5px;
+        }
+
+        .toggle-password:hover {
+            color: var(--text-dark);
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--brand-primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(30, 58, 138, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 960px) {
+            body {
+                flex-direction: column;
+            }
+            .info-panel {
+                padding: 50px 30px;
+                flex: none;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .login-panel {
+                padding: 50px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Left Side: Information Panel -->
+    <div class="info-panel">
+        <div class="info-content">
+            <!-- Perfectly Circular BCE Logo -->
+            <div class="logo-wrapper">
+                <img src="https://upload.wikimedia.org/wikipedia/en/6/68/Bakhtiyarpur_College_of_Engineering_Logo.png?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original" alt="BCE Logo" class="bce-logo">
+            </div>
+            
+            <h1>Hostel Management<br>System</h1>
+            <p>The official administrative command center for Bakhtiyarpur College of Engineering. Streamlining hostel operations, enhancing resident security, and digitizing campus life.</p>
+            
+            <!-- Interactive Features -->
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-bed"></i></div>
+                    <h3>Room Allocations</h3>
+                    <p>Real-time tracking of hostel occupancy, room shifting requests, and capacity management.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                    <h3>Fee Management</h3>
+                    <p>Monitor mess dues, hostel fees, and generate automated financial clearance reports.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                    <h3>Maintenance</h3>
+                    <p>Centralized ticketing system for plumbing, electrical, and infrastructure repairs.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-user-shield"></i></div>
+                    <h3>Resident Security</h3>
+                    <p>Digital out-pass verification and visitor management for student safety.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Side: Login Form -->
+    <div class="login-panel">
+        <div class="login-wrapper">
+            
+            <div class="login-header">
+                <h2>Admin Login</h2>
+                <p>Enter your staff credentials to continue</p>
+            </div>
+
+            {% if error %}
+            <div class="alert">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form method="POST">
+                
+                <!-- Staff ID Field -->
+                <div class="form-group">
+                    <label for="user_id">Official Staff ID</label>
+                    <div class="input-container">
+                        <input type="text" id="user_id" name="user_id" class="form-control" placeholder="e.g. BCE-8492" required autocomplete="off">
+                        <i class="fa-regular fa-id-badge input-icon"></i>
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-container">
+                        <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <i class="fa-regular fa-eye toggle-password" id="toggleIcon" onclick="togglePass()"></i>
+                    </div>
+                </div>
+
+                <!-- Setup Passkey Field -->
+                <div class="form-group">
+                    <label for="secret_code">
+                        Onboarding Passkey
+                        <span style="color: #94a3b8; font-weight: 400; font-size: 0.75rem;">(New Staff Only)</span>
+                    </label>
+                    <div class="input-container">
+                        <input type="password" id="secret_code" name="secret_code" class="form-control" placeholder="Enter authorization key">
+                        <i class="fa-solid fa-key input-icon"></i>
+                    </div>
+                </div>
+
+                <!-- Submit Action -->
+                <button type="submit" class="submit-btn">
+                    Authorize Access <i class="fa-solid fa-arrow-right-long"></i>
+                </button>
+            </form>
+            
+            <div style="text-align: center; margin-top: 30px; font-size: 0.8rem; color: #94a3b8;">
+                <i class="fa-solid fa-shield-halved" style="color: #10b981;"></i> AES-256 Encrypted Session
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Interactivity Scripts -->
+    <script>
+        function togglePass() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('toggleIcon');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
+</body>
+</html>

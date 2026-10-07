@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About BCE & Campus Life | Hostel Management</title>
+    <!-- Modern, readable fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            /* Collegiate Premium Palette */
+            --bce-navy: #0f172a;
+            --bce-blue: #1e3a8a;
+            --bce-light-blue: #38bdf8;
+            --bce-gold: #f59e0b;
+            --bg-main: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* --- Navigation Bar --- */
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-brand img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: white;
+            padding: 2px;
+        }
+
+        .nav-brand h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-brand span { color: var(--bce-light-blue); }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-student {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: var(--bce-light-blue);
+        }
+
+        .btn-student:hover { background: rgba(56, 189, 248, 0.2); }
+
+        .btn-admin {
+            background: var(--bce-light-blue);
+            color: var(--bce-navy);
+            font-weight: 600;
+        }
+
+        .btn-admin:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            padding: 160px 5% 100px;
+            background: linear-gradient(135deg, var(--bce-navy) 0%, var(--bce-blue) 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle mesh gradient overlay in hero */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -20%;
+            width: 70%; height: 150%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 60%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 850px;
+            margin: 0 auto;
+            animation: fadeUp 1s ease-out;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--bce-gold);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: #cbd5e1;
+            margin-bottom: 0;
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+        }
+
+        /* --- About College Section --- */
+        .section-padding { padding: 100px 5%; }
+        
+        .about-college {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-size: 2.5rem;
+            color: var(--bce-navy);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .about-text p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-box {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--bce-light-blue);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .stat-box h4 { font-size: 1.8rem; color: var(--bce-blue); margin-bottom: 4px; }
+        .stat-box span { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+
+        .about-image {
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+            background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+            border-radius: 24px;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Styling a placeholder for the campus image */
+        .about-image::after {
+            content: '\f1ad'; /* FontAwesome building icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 8rem;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* --- Hostel Infrastructure Section --- */
+        .hostel-section {
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--bce-navy);
+            margin-bottom: 15px;
+        }
+
+        .section-header p { color: var(--text-muted); font-size: 1.1rem; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--bg-main);
+            padding: 40px 30px;
+            border-radius: 20px;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 1;
+            border: 1px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            background: white;
+            border-color: #e2e8f0;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        .card-icon {
+            width: 70px; height: 70px;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--bce-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            font-size: 2rem;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover .card-icon {
+            background: var(--bce-blue);
+            color: white;
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .card h3 {
+            color: var(--bce-navy);
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+        }
+
+        .card p { color: var(--text-muted); font-size: 0.95rem; }
+
+        /* --- Footer --- */
+        .footer {
+            background: var(--bce-navy);
+            color: #94a3b8;
+            text-align: center;
+            padding: 30px 5%;
+            font-size: 0.9rem;
+        }
+
+        .footer span { color: white; font-weight: 500; }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .about-college { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2.5rem; }
+            .navbar { padding: 15px 5%; }
+            .nav-links { display: none; /* In a real app, add a hamburger menu here */ }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="#" class="nav-brand">
+            <!-- Using your specific requested logo -->
+            <img src="Bakhtiyarpur_College_of_Engineering_Logo.png" alt="BCE Logo">
+            <h2>BCE <span>Hostels</span></h2>
+        </a>
+        <div class="nav-links">
+            <a href="http://127.0.0.1:5001" class="nav-btn btn-student">
+                <i class="fa-solid fa-graduation-cap"></i> Student Portal
+            </a>
+            <a href="http://127.0.0.1:5000" class="nav-btn btn-admin">
+                <i class="fa-solid fa-shield-halved"></i> Official Portal
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <div class="badge">A Home Away From Home</div>
+            <h1>Elevating Campus Life at BCE.</h1>
+            <p>Experience the perfect blend of academic rigor and vibrant community living. The BCE Digital Hostel Management System seamlessly integrates your daily residential needs with cutting-edge technology.</p>
+        </div>
+    </header>
+
+    <!-- About BCE Section -->
+    <section class="section-padding">
+        <div class="about-college">
+            <div class="about-text">
+                <h2>Nurturing the Brightest Engineering Minds in Bihar.</h2>
+                <p>Located in the historic region of Champapur, <strong>Bakhtiyarpur College of Engineering (BCE)</strong> stands as a premier institute dedicated to technical excellence and innovation. We believe that a student's environment heavily influences their academic success.</p>
+                <p>Our expansive campus is designed to foster holistic development. From state-of-the-art laboratories to our highly secure and modern residential hostels, every aspect of BCE is engineered to empower the next generation of technologists.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <h4>1,200+</h4>
+                        <span>Residential Students</span>
+                    </div>
+                    <div class="stat-box">
+                        <h4>24/7</h4>
+                        <span>Digital Administration</span>
+                    </div>
+                </div>
+            </div>
+            <div class="about-image">
+                <!-- CSS renders a beautiful placeholder here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Hostel Details Section -->
+    <section class="section-padding hostel-section">
+        <div class="section-header">
+            <h2>Our Residential Ecosystem</h2>
+            <p>BCE offers meticulously designed residential blocks that provide safety, comfort, and a thriving peer-to-peer learning environment.</p>
+        </div>
+
+        <div class="grid">
+            <!-- Feature 1 -->
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-building-columns"></i></div>
+                <h3>The Heritage Blocks (1 & 2)</h3>
+                <p>These classic 3-floor residential blocks feature a mix of single and triple occupancy rooms. Tailored primarily for senior engineering undergraduates, they offer quiet study zones, traditional campus charm, and close proximity to academic buildings.</p>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-city"></i></div>
+                <h3>The Modern Nexus (Hostel 3)</h3>
+                <p>A newly developed, multi-story facility designed for high-capacity housing. Hostel 3 is fully integrated with our smart management system, featuring automated room occupancy tracking, high-speed Wi-Fi nodes, and expansive recreational lounges.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-headset"></i></div>
+                <h3>Smart Digital Living</h3>
+                <p>Say goodbye to paper registers. Our centralized <strong>Hostel Management System (HMS)</strong> provides a direct support ticketing pipeline. Students can instantly request maintenance, manage mess dues, and secure digital gate passes directly from their smartphones.</p>
+            </div>
+            
+            <!-- Feature 4 -->
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-shield-heart"></i></div>
+                <h3>Security & Wellness</h3>
+                <p>Your safety is our priority. Our hostels are equipped with 24/7 CCTV surveillance, biometric campus entry, round-the-clock administrative wardens, and on-campus medical assistance to ensure absolute peace of mind.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 <span>Bakhtiyarpur College of Engineering</span>. All rights reserved.</p>
+        <p style="margin-top: 5px;">Powered by the BCE Digital Initiative.</p>
+    </footer>
+
+</body>
+</html>

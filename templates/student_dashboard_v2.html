@@ -1,0 +1,19 @@
+{% extends 'student_base.html' %}
+{% block title %}Dashboard | BCE Hostel{% endblock %}
+{% block page_title %}Welcome, {{ student.Name }}{% endblock %}
+{% block page_subtitle %}{{ student.Branch }} · Year {{ student.Year }} · {{ student.Student_ID }}{% endblock %}
+
+{% block content %}
+<div class="metric-grid">
+  <div class="metric"><i class="fa-solid fa-bed"></i><strong>{% if allocation %}{{ allocation.Room_No }}{% else %}—{% endif %}</strong><span>{% if allocation %}{{ allocation.Hostel_No }}{% else %}No room assigned{% endif %}</span></div>
+  <div class="metric"><i class="fa-solid fa-file-pen"></i><strong>{{ requests|length }}</strong><span>Room requests</span></div>
+  <div class="metric"><i class="fa-solid fa-bullhorn"></i><strong>{{ notices|length }}</strong><span>Active notices</span></div>
+  <div class="metric"><i class="fa-solid fa-screwdriver-wrench"></i><strong><a style="color:inherit;text-decoration:none" href="{{ url_for('submit_maintenance') }}">Report</a></strong><span>Maintenance issue</span></div>
+</div>
+<div class="grid">
+  <section class="panel"><h2>Accommodation</h2>{% if allocation %}<p><span class="badge success">Active allocation</span></p><h3>{{ allocation.Hostel_No }}, Room {{ allocation.Room_No }}</h3><p class="muted">Move-in date: {{ allocation.Move_In_Date.strftime('%d %b %Y') if allocation.Move_In_Date else '—' }}</p>{% else %}<p><span class="badge warning">No room allocation</span></p><p class="muted">Submit a room request for official review.</p><a class="button" href="{{ url_for('request_room') }}">Request a room</a>{% endif %}</section>
+  <section class="panel"><h2>Latest notice</h2>{% if notices %}<h3>{{ notices[0].Title }}</h3><p class="muted">{{ notices[0].Message }}</p><a class="button secondary" href="{{ url_for('student_notices') }}">View all notices</a>{% else %}<p class="muted">No active notices at the moment.</p>{% endif %}</section>
+</div>
+<section class="panel"><h2>Quick services</h2><div class="inline"><a class="button" href="{{ url_for('request_room') }}"><i class="fa-solid fa-bed"></i> Request room</a><a class="button secondary" href="{{ url_for('student_fees') }}"><i class="fa-solid fa-indian-rupee-sign"></i> View fees</a><a class="button secondary" href="{{ url_for('submit_maintenance') }}"><i class="fa-solid fa-screwdriver-wrench"></i> Maintenance</a><a class="button secondary" href="{{ url_for('student_support') }}"><i class="fa-solid fa-headset"></i> Support</a></div></section>
+<section class="panel"><h2>Room request history</h2><div class="table-wrap"><table><thead><tr><th>Request</th><th>Preferred hostel</th><th>Room type</th><th>Assigned room</th><th>Reason</th><th>Status</th></tr></thead><tbody>{% for request_item in requests %}<tr><td>#{{ request_item.Request_ID }}</td><td>{{ request_item.Preferred_Hostel }}</td><td>{{ request_item.Preferred_Room_Type }} seater</td><td>{% if request_item.Allocated_Room_No %}<span class="badge success">{{ request_item.Allocated_Hostel_No }}, Room {{ request_item.Allocated_Room_No }}</span>{% else %}<span class="muted">Pending allocation</span>{% endif %}</td><td>{{ request_item.Reason }}</td><td><span class="badge {% if request_item.Status == 'Approved' %}success{% elif request_item.Status == 'Rejected' %}danger{% else %}warning{% endif %}">{{ request_item.Status }}</span></td></tr>{% else %}<tr><td colspan="6" class="empty">You have not submitted a room request.</td></tr>{% endfor %}</tbody></table></div></section>
+{% endblock %}

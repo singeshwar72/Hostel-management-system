@@ -1,0 +1,65 @@
+{% extends 'student_base.html' %}
+{% block title %}Pay Fee | BCE Hostel{% endblock %}
+{% block page_title %}Secure fee payment{% endblock %}
+{% block page_subtitle %}Choose your preferred payment method{% endblock %}
+{% block extra_style %}
+<style>
+.payment-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:22px}.method-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.method-choice{position:relative;display:block;border:1px solid var(--line);border-radius:13px;padding:16px;cursor:pointer;background:#fff;transition:.2s}.method-choice:hover,.method-choice:has(input:checked){border-color:var(--primary);box-shadow:0 8px 20px rgba(53,75,189,.12);background:#f7f8ff}.method-choice input{position:absolute;opacity:0}.method-choice.disabled{cursor:not-allowed;opacity:.58;background:#f4f5f8}.method-choice.disabled:hover{border-color:var(--line);box-shadow:none}.method-choice i{font-size:1.35rem;color:var(--primary);margin-bottom:9px;display:block}.method-choice strong,.method-choice span{display:block}.method-choice span{font-size:.84rem;color:var(--muted);margin-top:3px}.coming-soon{display:inline-block;margin-top:7px;padding:3px 8px;border-radius:99px;background:#fff0cb;color:#805a00;font-size:.72rem;font-weight:800}.payment-summary{background:linear-gradient(145deg,#263879,#344ab0);color:#fff;border-radius:16px;padding:22px}.payment-summary .muted{color:#dce4ff}.amount{font-size:2rem;font-weight:800;margin:10px 0}.secure-note{font-size:.85rem;padding:11px;background:#f7f8fb;border-radius:9px;color:var(--muted)}.qr-card{margin-top:19px;padding:17px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,#fbfcff,#f2f5ff);display:flex;gap:17px;align-items:center}.qr-card[hidden]{display:none}.qr-card img{width:142px;height:142px;background:#fff;padding:8px;border:1px solid #e4e8f3;border-radius:10px}.upi-id{font-weight:800;color:var(--primary);overflow-wrap:anywhere}.copy-button{padding:6px 10px;margin-top:8px;font-size:.82rem}@media(max-width:800px){.payment-layout{grid-template-columns:1fr}.method-grid{grid-template-columns:1fr}}@media(max-width:420px){.qr-card{align-items:flex-start;flex-direction:column}}
+</style>
+{% endblock %}
+{% block content %}
+<div class="payment-layout">
+  <section class="panel">
+    <div class="section-head"><div><h2>Choose payment method</h2><p class="muted">For {{ fee.Fee_Type }}</p></div><a class="button secondary" href="{{ url_for('student_fees') }}"><i class="fa-solid fa-arrow-left"></i> My fees</a></div>
+    <form method="POST" action="{{ url_for('submit_fee_payment', student_fee_id=fee.Student_Fee_ID) }}">
+      <div class="method-grid">
+        <label class="method-choice"><input type="radio" name="payment_method" value="UPI" checked><i class="fa-solid fa-mobile-screen-button"></i><strong>UPI</strong><span>GPay, PhonePe, Paytm, BHIM</span></label>
+        <label class="method-choice disabled"><input type="radio" name="payment_method" value="Debit / Credit Card" disabled><i class="fa-regular fa-credit-card"></i><strong>Debit / Credit Card</strong><span>Visa, Mastercard, RuPay</span><b class="coming-soon">COMING SOON</b></label>
+        <label class="method-choice disabled"><input type="radio" name="payment_method" value="Net Banking" disabled><i class="fa-solid fa-building-columns"></i><strong>Net banking</strong><span>Pay directly from your bank</span><b class="coming-soon">COMING SOON</b></label>
+        <label class="method-choice disabled"><input type="radio" name="payment_method" value="Wallet" disabled><i class="fa-solid fa-wallet"></i><strong>Wallet</strong><span>Paytm and supported wallets</span><b class="coming-soon">COMING SOON</b></label>
+      </div>
+      <div class="qr-card" id="upiQrCard" hidden>
+        <img id="upiQrImage" alt="Amount-specific UPI QR code">
+        <div><strong><i class="fa-solid fa-qrcode" style="color:var(--primary)"></i> Scan &amp; pay from phone</strong><p class="muted small" id="qrAmountText">Scan this QR code with any UPI app and complete payment.</p><span class="upi-id" id="upiId">{{ upi_id }}</span><br><button class="button secondary copy-button" id="copyUpi" type="button"><i class="fa-regular fa-copy"></i> Copy UPI ID</button></div>
+      </div>
+      <div class="field" style="margin-top:18px"><label>Amount to pay</label><input name="amount" type="number" min="0.01" max="{{ balance }}" step="0.01" value="{{ balance }}" required></div>
+      <div class="field"><label>UPI / transaction reference</label><input name="utr_reference" maxlength="100" placeholder="UTR, bank reference, or transaction ID" required></div>
+      <p class="secure-note"><i class="fa-solid fa-lock"></i> Pay through your chosen bank/app, then enter its reference here. This portal does not collect card number, CVV, bank password, or UPI PIN.</p>
+      <div class="inline" style="margin-top:16px"><button class="button secondary" id="proceedPayment" type="button"><i class="fa-solid fa-lock"></i> Proceed to payment</button><button type="submit"><i class="fa-solid fa-paper-plane"></i> I have paid — submit reference</button></div>
+      <p class="muted small" id="paymentGuidance" style="margin-top:12px">Select a payment method, then click <strong>Proceed to payment</strong>.</p>
+    </form>
+  </section>
+  <aside class="payment-summary"><span class="muted">Amount payable</span><div class="amount">₹{{ '%.2f'|format(balance) }}</div><strong>{{ fee.Fee_Type }}</strong><p class="muted">Fee due: ₹{{ '%.2f'|format(fee.Amount_Due) }}<br>Already paid: ₹{{ '%.2f'|format(fee.Amount_Paid) }}</p><hr style="border-color:rgba(255,255,255,.2);margin:18px 0"><p class="muted small"><i class="fa-solid fa-circle-check"></i> Official verification is required before the payment status is updated.</p></aside>
+</div>
+<script>
+document.getElementById('copyUpi').addEventListener('click', async function () {
+  const button = this;
+  try { await navigator.clipboard.writeText(document.getElementById('upiId').textContent.trim()); button.innerHTML = '<i class="fa-solid fa-check"></i> Copied'; setTimeout(() => button.innerHTML = '<i class="fa-regular fa-copy"></i> Copy UPI ID', 1800); }
+  catch (error) { window.prompt('Copy the UPI ID:', document.getElementById('upiId').textContent.trim()); }
+});
+document.getElementById('proceedPayment').addEventListener('click', function () {
+  const method = document.querySelector('input[name="payment_method"]:checked').value;
+  const guidance = document.getElementById('paymentGuidance');
+  if (method === 'UPI') {
+    const amountInput = document.querySelector('input[name="amount"]');
+    const amount = Number(amountInput.value);
+    const maximum = Number(amountInput.max);
+    if (!amount || amount <= 0 || amount > maximum) { amountInput.focus(); guidance.textContent = 'Enter a valid amount up to ₹' + maximum.toFixed(2) + '.'; return; }
+    const qrCard = document.getElementById('upiQrCard');
+    const localQrUrl = '{{ url_for("payment_upi_qr", student_fee_id=fee.Student_Fee_ID) }}?amount=' + encodeURIComponent(amount.toFixed(2)) + '&t=' + Date.now();
+    const upiUri = 'upi://pay?pa=' + encodeURIComponent('{{ upi_id }}') + '&pn=' + encodeURIComponent('BCE Hostel') + '&am=' + encodeURIComponent(amount.toFixed(2)) + '&cu=INR&tn=' + encodeURIComponent('Hostel fee - {{ fee.Fee_Type }}');
+    const onlineQrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=280x280&format=png&data=' + encodeURIComponent(upiUri);
+    const qrImage = document.getElementById('upiQrImage');
+    qrImage.onerror = function () { this.onerror = null; this.src = localQrUrl; };
+    qrImage.src = onlineQrUrl;
+    qrImage.alt = 'UPI QR code for ₹' + amount.toFixed(2);
+    document.getElementById('qrAmountText').textContent = 'Scan this fresh QR code to pay exactly ₹' + amount.toFixed(2) + '.';
+    qrCard.hidden = false;
+    qrCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    guidance.innerHTML = '<i class="fa-solid fa-qrcode"></i> Your QR is ready. After payment, submit the UTR below.';
+  } else {
+    guidance.innerHTML = '<i class="fa-solid fa-shield-halved"></i> ' + method + ' payments require the college payment-gateway account. Until it is connected, use the UPI QR above and submit its reference.';
+  }
+});
+</script>
+{% endblock %}

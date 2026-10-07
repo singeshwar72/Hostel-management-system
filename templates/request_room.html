@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Request Room - Student Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+        body{ background: #f8fafc; display: flex; min-height: 100vh; }
+        .sidebar{ width: 260px; background: #0f172a; color: white; display: flex; flex-direction: column; padding: 20px; }
+        .sidebar h2{ font-size: 1.2rem; margin-bottom: 30px; text-align: center; color: #38bdf8; }
+        .sidebar a{ color: #cbd5e1; text-decoration: none; padding: 12px 15px; border-radius: 8px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; transition: 0.2s; }
+        .sidebar a:hover, .sidebar a.active{ background: #1e293b; color: white; }
+        .main-content{ flex: 1; padding: 30px; overflow-y: auto; }
+        .header{ margin-bottom: 25px; }
+        .header h1{ color: #0f172a; font-size: 1.8rem; }
+        .card{ background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .form-group{ margin-bottom: 15px; }
+        .form-group label{ display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 6px; }
+        .form-control{ width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none; }
+        .btn{ padding: 10px 20px; background: #0284c7; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .btn:hover{ background: #0369a1; }
+        .alert{ padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 15px; background: #dcfce7; color: #166534; }
+        .alert-error{ padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 15px; background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Student Portal</h2>
+        <a href="{{ url_for('student_dashboard') }}"><i class="fa-solid fa-house"></i> Dashboard</a>
+        <a href="{{ url_for('request_room') }}" class="active"><i class="fa-solid fa-bed"></i> Request Room</a>
+        <a href="{{ url_for('student_support') }}"><i class="fa-solid fa-headset"></i> Support & Grievances</a>
+        <a href="{{ url_for('student_profile') }}"><i class="fa-solid fa-user-gear"></i> Profile</a>
+        <a href="{{ url_for('logout') }}" style="margin-top: auto; background: rgba(239, 68, 68, 0.1); color: #f87171;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <h1>Request a Room</h1>
+        </div>
+        <div class="card">
+            {% if message %}<div class="alert"><i class="fa-solid fa-circle-check"></i> {{ message }}</div>{% endif %}
+            {% if error %}<div class="alert-error"><i class="fa-solid fa-triangle-exclamation"></i> {{ error }}</div>{% endif %}
+            
+            <form method="POST">
+                <div class="form-group">
+                    <label>Preferred Hostel</label>
+                    <select name="preferred_hostel" class="form-control" required>
+                        <option value="Hostel 1">Hostel 1</option>
+                        <option value="Hostel 2">Hostel 2</option>
+                        <option value="Hostel 3">Hostel 3</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Preferred Room Type</label>
+                    <select name="preferred_room_type" class="form-control" required>
+                        <option value="1">1 Seater</option>
+                        <option value="3">3 Seater</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Reason for Request <span style="color: #94a3b8; font-weight: normal;">(Optional)</span></label>
+                    <textarea name="reason" class="form-control" rows="4" placeholder="Enter reason (optional)..."></textarea>
+                </div>
+                <button type="submit" class="btn">Submit Request</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

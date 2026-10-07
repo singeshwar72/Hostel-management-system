@@ -1,0 +1,42 @@
+{% extends 'student_base.html' %}
+{% block title %}Request Room | BCE Hostel{% endblock %}
+{% block page_title %}Request a Room{% endblock %}
+{% block page_subtitle %}Choose your preferred accommodation for official review.{% endblock %}
+
+{% block content %}
+{% if message %}<div class="alert success">{{ message }}</div>{% endif %}
+{% if error %}<div class="alert error">{{ error }}</div>{% endif %}
+<div class="grid">
+  <section class="panel">
+    <h2>Room request</h2>
+    <form method="POST">
+      <div class="field">
+        <label>Preferred hostel</label>
+        <select name="preferred_hostel" required>
+          <option value="">Choose hostel</option>
+          <option value="Hostel 1">Hostel 1 — 200 beds</option>
+          <option value="Hostel 2">Hostel 2 — 200 beds</option>
+          <option value="Hostel 3">Hostel 3 — 300 beds</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Preferred room type</label>
+        <select name="preferred_room_type" required>
+          <option value="">Choose room type</option>
+          <option value="1">Single seater</option>
+          <option value="3">Triple seater</option>
+        </select>
+      </div>
+      <div class="field"><label>Reason (optional)</label><textarea name="reason" placeholder="Tell the hostel office about any relevant requirement."></textarea></div>
+      <button type="submit"><i class="fa-solid fa-paper-plane"></i> Submit request</button>
+    </form>
+  </section>
+  <section class="panel">
+    <h2>Hostel capacity</h2>
+    <p><strong>Hostel 1</strong>: Ground, 1st and 2nd floors · 50 single rooms + 50 triple rooms · 200 beds.</p>
+    <p><strong>Hostel 2</strong>: Ground, 1st and 2nd floors · 50 single rooms + 50 triple rooms · 200 beds.</p>
+    <p><strong>Hostel 3</strong>: Ground through 5th floor · 75 single rooms + 75 triple rooms · 300 beds.</p>
+    <p class="muted small">Single-seater rooms are available on every floor. Allocation remains subject to availability and official approval.</p>
+  </section>
+</div>
+{% endblock %}

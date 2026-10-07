@@ -1,0 +1,920 @@
+/* =====================================
+   GLOBAL SETTINGS
+===================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+
+:root{
+
+    --primary:#2563eb;
+    --secondary:#3b82f6;
+
+    --bg:#f4f7fb;
+
+    --card:#ffffff;
+
+    --text:#1e293b;
+
+    --muted:#64748b;
+
+    --sidebar:#0f172a;
+
+}
+
+
+
+body{
+
+    background:var(--bg);
+
+    color:var(--text);
+
+    min-height:100vh;
+
+    transition:.3s;
+
+}
+
+
+
+/* =====================================
+        LOADER
+===================================== */
+
+
+.loader{
+
+    position:fixed;
+
+    inset:0;
+
+    background:#0f172a;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
+
+}
+
+
+.loader-box{
+
+    text-align:center;
+
+    color:white;
+
+}
+
+
+.loader-box h2{
+
+    font-size:45px;
+
+    color:#60a5fa;
+
+}
+
+
+
+.spinner{
+
+    width:50px;
+
+    height:50px;
+
+    border:5px solid rgba(255,255,255,.2);
+
+    border-top-color:white;
+
+    border-radius:50%;
+
+    animation:spin 1s linear infinite;
+
+    margin:20px auto;
+
+}
+
+
+@keyframes spin{
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+
+
+
+/* =====================================
+        SIDEBAR
+===================================== */
+
+
+.sidebar{
+
+    position:fixed;
+
+    left:0;
+
+    top:0;
+
+    height:100vh;
+
+    width:260px;
+
+    background:
+
+    linear-gradient(
+
+    180deg,
+
+    #0f172a,
+
+    #1e3a8a
+
+    );
+
+
+    color:white;
+
+    z-index:1000;
+
+    transition:.35s;
+
+    overflow:hidden;
+
+    box-shadow:
+
+    10px 0 30px rgba(0,0,0,.15);
+
+}
+
+
+
+.sidebar.collapsed{
+
+    width:85px;
+
+}
+
+
+
+
+.logo{
+
+    height:75px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:12px;
+
+    font-size:22px;
+
+    font-weight:700;
+
+    border-bottom:
+
+    1px solid rgba(255,255,255,.15);
+
+}
+
+
+
+.sidebar.collapsed .logo span{
+
+    display:none;
+
+}
+
+
+
+
+
+.menu{
+
+    list-style:none;
+
+    padding:20px 12px;
+
+}
+
+
+
+.menu li{
+
+    margin-bottom:8px;
+
+}
+
+
+
+.menu a{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    padding:14px 18px;
+
+    color:white;
+
+    text-decoration:none;
+
+    border-radius:12px;
+
+    transition:.3s;
+
+}
+
+
+
+.menu a:hover{
+
+    background:rgba(255,255,255,.18);
+
+    transform:translateX(5px);
+
+}
+
+
+
+.menu i{
+
+    width:25px;
+
+    font-size:19px;
+
+}
+
+
+
+.sidebar.collapsed span{
+
+    display:none;
+
+}
+
+
+
+
+.logout:hover{
+
+    background:#dc2626!important;
+
+}
+
+
+
+
+/* =====================================
+        TOPBAR
+===================================== */
+
+
+.topbar{
+
+
+    position:fixed;
+
+    top:0;
+
+    left:260px;
+
+    right:0;
+
+
+    height:75px;
+
+
+    background:
+
+    rgba(255,255,255,.85);
+
+
+    backdrop-filter:blur(15px);
+
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+
+    padding:0 25px;
+
+
+    z-index:900;
+
+
+    box-shadow:
+
+    0 5px 20px rgba(0,0,0,.08);
+
+
+    transition:.35s;
+
+
+}
+
+
+
+.sidebar.collapsed ~ .topbar{
+
+    left:85px;
+
+}
+
+
+
+
+.left-section{
+
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+}
+
+
+
+.left-section h2{
+
+
+    font-size:19px;
+
+    color:#1e293b;
+
+
+}
+
+
+
+.menu-btn{
+
+
+    border:none;
+
+    background:none;
+
+
+    font-size:25px;
+
+
+    color:#2563eb;
+
+
+    cursor:pointer;
+
+
+}
+
+
+
+
+
+/* =====================================
+        SEARCH
+===================================== */
+
+
+.search-box{
+
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+
+    background:#f1f5f9;
+
+
+    padding:10px 15px;
+
+
+    border-radius:30px;
+
+
+}
+
+
+
+.search-box input{
+
+
+    border:none;
+
+    outline:none;
+
+    background:none;
+
+    width:220px;
+
+}
+
+
+
+
+
+/* =====================================
+        RIGHT SECTION
+===================================== */
+
+
+.right-section{
+
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+}
+
+
+
+
+.datetime{
+
+
+    background:white;
+
+
+    padding:8px 18px;
+
+
+    border-radius:15px;
+
+
+    text-align:right;
+
+
+    box-shadow:
+
+    0 5px 15px rgba(0,0,0,.08);
+
+
+}
+
+
+#clock{
+
+
+    color:#2563eb;
+
+    font-family:Consolas;
+
+    font-size:22px;
+
+}
+
+
+#date{
+
+    color:#64748b;
+
+    font-size:12px;
+
+}
+
+
+
+
+
+.icon-btn{
+
+
+    width:42px;
+
+    height:42px;
+
+
+    border:none;
+
+
+    border-radius:50%;
+
+
+    background:#eff6ff;
+
+
+    color:#2563eb;
+
+
+    cursor:pointer;
+
+
+    position:relative;
+
+
+}
+
+
+
+.icon-btn:hover{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+
+
+
+
+.badge{
+
+
+    position:absolute;
+
+    top:-5px;
+
+    right:-3px;
+
+
+    background:red;
+
+    color:white;
+
+
+    width:18px;
+
+    height:18px;
+
+
+    font-size:11px;
+
+
+    border-radius:50%;
+
+
+}
+
+
+
+
+
+
+/* =====================================
+        DROPDOWNS
+===================================== */
+
+
+.notification,
+.profile{
+
+    position:relative;
+
+}
+
+
+
+.notification-menu,
+.profile-menu{
+
+
+    position:absolute;
+
+    right:0;
+
+    top:55px;
+
+
+    width:260px;
+
+
+    background:white;
+
+
+    border-radius:15px;
+
+
+    padding:15px;
+
+
+    box-shadow:
+
+    0 15px 40px rgba(0,0,0,.15);
+
+
+    display:none;
+
+
+}
+
+
+
+.notification:hover .notification-menu,
+.profile:hover .profile-menu{
+
+
+    display:block;
+
+
+}
+
+
+
+.notification-menu p{
+
+
+    padding:10px;
+
+    border-bottom:
+
+    1px solid #eee;
+
+
+}
+
+
+
+
+
+.profile-btn{
+
+
+    border:none;
+
+    background:none;
+
+
+    display:flex;
+
+    align-items:center;
+
+
+    gap:10px;
+
+
+    cursor:pointer;
+
+
+}
+
+
+
+.profile-btn img{
+
+
+    width:42px;
+
+    height:42px;
+
+
+    border-radius:50%;
+
+
+}
+
+
+
+
+.profile-menu a{
+
+
+    display:block;
+
+    padding:12px;
+
+
+    text-decoration:none;
+
+    color:#334155;
+
+
+}
+
+
+
+.profile-menu a:hover{
+
+
+    background:#eff6ff;
+
+
+}
+
+
+
+
+
+/* =====================================
+        CONTENT
+===================================== */
+
+
+.content{
+
+
+    margin-left:260px;
+
+
+    padding:110px 30px 30px;
+
+
+    transition:.35s;
+
+
+}
+
+
+
+.sidebar.collapsed ~ .topbar + .content{
+
+
+    margin-left:85px;
+
+
+}
+
+
+
+/* =====================================
+        DARK MODE
+===================================== */
+
+
+body.dark{
+
+
+    --bg:#020617;
+
+    --card:#1e293b;
+
+    --text:white;
+
+
+}
+
+
+
+.dark .topbar{
+
+
+    background:#111827;
+
+
+}
+
+
+.dark .left-section h2{
+
+
+    color:white;
+
+}
+
+
+.dark .datetime,
+.dark .notification-menu,
+.dark .profile-menu{
+
+
+    background:#1e293b;
+
+    color:white;
+
+}
+
+
+
+
+/* =====================================
+        MOBILE
+===================================== */
+
+
+.overlay{
+
+
+    position:fixed;
+
+
+    inset:0;
+
+
+    background:rgba(0,0,0,.5);
+
+
+    display:none;
+
+
+    z-index:999;
+
+
+}
+
+
+
+.overlay.show{
+
+    display:block;
+
+}
+
+
+
+
+@media(max-width:900px){
+
+
+.sidebar{
+
+
+    left:-260px;
+
+
+}
+
+
+
+.sidebar.mobile{
+
+
+    left:0;
+
+
+}
+
+
+
+.topbar{
+
+
+    left:0;
+
+
+}
+
+
+
+.content{
+
+
+    margin-left:0;
+
+
+}
+
+
+
+.search-box{
+
+
+    display:none;
+
+
+}
+
+
+
+.datetime{
+
+
+    display:none;
+
+
+}
+
+
+
+.left-section h2{
+
+
+    display:none;
+
+
+}
+
+
+
+}
+
+
