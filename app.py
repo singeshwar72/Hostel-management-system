@@ -7,7 +7,10 @@ from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = 'bce_hostel_official_portal_secure_key'
+app.secret_key = os.environ.get(
+    'SECRET_KEY',
+    'bce_hostel_official_portal_secure_key'
+)
 app.config['SESSION_COOKIE_NAME'] = 'official_secure_session'
 
 UPLOAD_FOLDER = 'static/uploads'
@@ -17,11 +20,13 @@ HOSTEL_UPI_ID = os.environ.get('HOSTEL_UPI_ID', 'singeshwarkumar1@ybl')
 
 def connect_db():
     return mysql.connector.connect(
-        host='localhost',
-        database='HostelManagement',
-        user='root',
-        password='Kumar@123'  # Update if your MySQL password is different
+        host=os.environ.get('DB_HOST', 'localhost'),
+        database=os.environ.get('DB_NAME', 'HostelManagement'),
+        user=os.environ.get('DB_USER', 'root'),
+        password=os.environ.get('DB_PASSWORD', 'Kumar@123'),
+        port=int(os.environ.get('DB_PORT', '3306'))
     )
+    
 
 
 def log_audit(cursor, action, entity_type, entity_id=None, details=None):
