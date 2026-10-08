@@ -14,7 +14,7 @@ except ImportError:
     qrcode = None
 
 app = Flask(__name__)
-app.secret_key = 'bce_hostel_student_portal_secure_key'
+app.secret_key = os.environ.get('STUDENT_SECRET_KEY')
 app.config['SESSION_COOKIE_NAME'] = 'student_secure_session'
 
 UPLOAD_FOLDER = 'static/uploads'
@@ -41,11 +41,13 @@ def build_upi_payment_qr(upi_id, amount, fee_type):
 
 def connect_db():
     return mysql.connector.connect(
-        host='localhost',
-        database='HostelManagement',
-        user='root',
-        password='Kumar@123'  # Update if your MySQL password is different
+        host=os.environ.get('DB_HOST'),
+        database=os.environ.get('DB_NAME'),
+        user=os.environ.get('DB_USER'),
+        password=os.environ.get('DB_PASSWORD'),
+        port=int(os.environ.get('DB_PORT', 3306))
     )
+    
 
 
 def ensure_allocation_eligibility_column():

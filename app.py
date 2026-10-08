@@ -7,10 +7,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = os.environ.get(
-    'SECRET_KEY',
-    'bce_hostel_official_portal_secure_key'
-)
+app.secret_key = os.environ['SECRET_KEY']
 app.config['SESSION_COOKIE_NAME'] = 'official_secure_session'
 
 UPLOAD_FOLDER = 'static/uploads'
@@ -21,10 +18,10 @@ HOSTEL_UPI_ID = os.environ.get('HOSTEL_UPI_ID', 'singeshwarkumar1@ybl')
 def connect_db():
     return mysql.connector.connect(
         host=os.environ.get('DB_HOST', 'localhost'),
+        port=int(os.environ.get('DB_PORT', '3306')),
         database=os.environ.get('DB_NAME', 'HostelManagement'),
         user=os.environ.get('DB_USER', 'root'),
-        password=os.environ.get('DB_PASSWORD', 'Kumar@123'),
-        port=int(os.environ.get('DB_PORT', '3306'))
+        password=os.environ['DB_PASSWORD']
     )
     
 
@@ -287,51 +284,42 @@ except Exception:
 @app.route('/', methods=['GET', 'POST'])
 def login():
     error = None
+
     if request.method == 'POST':
-        user_id = request.form.get('user_id').strip()
-        password = request.form.get('password')
-        secret_code = request.form.get('secret_code') 
-        
+        user_id = request.form.get('user_id', '').strip()
+        password = request.form.get('password', '')
+
         conn = connect_db()
+
         if conn:
             cursor = conn.cursor(dictionary=True)
-            cursor.execute("SELECT * FROM Users WHERE User_ID = %s AND Role = 'Official'", (user_id,))
-            user = cursor.fetchone()
-            
-            if user:
-                if check_password_hash(user['Password'], password):
-                    session['loggedin'] = True
-                    session['user_id'] = user['User_ID']
-                    session['role'] = user['Role']
-                    cursor.close()
-                    conn.close()
-                    return redirect(url_for('official_dashboard'))
-                else:
-                    error = "Invalid password. Please check your credentials."
-                    cursor.close()
-                    conn.close()
-            else:
-                if secret_code != "2026":
-                    error = "Staff ID not found. To auto-register, enter correct Staff Secret Passkey."
-                    cursor.close()
-                    conn.close()
-                else:
-                    hashed_pw = generate_password_hash(password)
-                    try:
-                        cursor.execute("INSERT INTO Users (User_ID, Password, Role, Name) VALUES (%s, %s, 'Official', %s)",
-                                        (user_id, hashed_pw, f"Official {user_id}"))
-                        conn.commit()
+
+            try:
+                cursor.execute(
+                    "SELECT * FROM Users WHERE User_ID = %s AND Role = 'Official'",
+                    (user_id,)
+                )
+                user = cursor.fetchone()
+
+                if user:
+                    if check_password_hash(user['Password'], password):
                         session['loggedin'] = True
-                        session['user_id'] = user_id
-                        session['role'] = 'Official'
-                        cursor.close()
-                        conn.close()
+                        session['user_id'] = user['User_ID']
+                        session['role'] = user['Role']
+
                         return redirect(url_for('official_dashboard'))
-                    except Exception as e:
-                        error = f"Auto-signup error: {e}"
-                        cursor.close()
-                        conn.close()
-                        
+                    else:
+                        error = "Invalid password. Please check your credentials."
+                else:
+                    error = "Official account not found. Please contact the administrator."
+
+            except Exception:
+                error = "Unable to process login. Please try again."
+
+            finally:
+                cursor.close()
+                conn.close()
+
     return render_template('login_v2.html', error=error)
 
 @app.route('/about')
