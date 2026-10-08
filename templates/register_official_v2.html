@@ -11,7 +11,7 @@
         <h1>Official Registration</h1>
 
         <p class="subtitle">
-            Create your official hostel management account.
+            Authorized officials only. Registration requires an official registration code.
         </p>
 
         {% if error %}
@@ -21,6 +21,7 @@
         {% endif %}
 
         {% if success %}
+
         <div class="alert success">
             {{ success }}
         </div>
@@ -57,7 +58,7 @@
             </div>
 
             <div class="field">
-                <label>Email</label>
+                <label>Official Email</label>
                 <input
                     name="email"
                     type="email"
@@ -72,6 +73,16 @@
                     name="phone"
                     type="tel"
                     placeholder="Enter phone number"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label>Official Registration Code</label>
+                <input
+                    name="registration_code"
+                    type="password"
+                    placeholder="Enter official registration code"
                     required
                 >
             </div>
@@ -99,7 +110,7 @@
             </div>
 
             <button type="submit">
-                <i class="fa-solid fa-user-plus"></i>
+                <i class="fa-solid fa-user-shield"></i>
                 Register as Official
             </button>
 
@@ -109,7 +120,7 @@
             Already registered?
             <a href="{{ url_for('login') }}">
                 Official Login
-            </a>
+            </a>.
         </p>
 
         {% endif %}

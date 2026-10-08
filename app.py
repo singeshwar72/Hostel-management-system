@@ -1264,11 +1264,28 @@ def register_official():
         name = request.form.get('name', '').strip()
         email = request.form.get('email', '').strip()
         phone = request.form.get('phone', '').strip()
+        registration_code = request.form.get('registration_code', '').strip()
         password = request.form.get('password', '')
         confirm_password = request.form.get('confirm_password', '')
 
-        if not all([user_id, name, email, phone, password, confirm_password]):
+        official_code = os.environ.get('OFFICIAL_REGISTRATION_CODE', '')
+
+        if not all([
+            user_id,
+            name,
+            email,
+            phone,
+            registration_code,
+            password,
+            confirm_password
+        ]):
             error = "Please fill in all fields."
+
+        elif not official_code:
+            error = "Official registration is currently unavailable."
+
+        elif registration_code != official_code:
+            error = "Invalid official registration code."
 
         elif password != confirm_password:
             error = "Passwords do not match."
@@ -1284,7 +1301,6 @@ def register_official():
                 conn = connect_db()
                 cursor = conn.cursor(dictionary=True)
 
-                # Check if Staff ID already exists
                 cursor.execute(
                     "SELECT User_ID FROM Users WHERE User_ID = %s",
                     (user_id,)
@@ -1323,6 +1339,7 @@ def register_official():
             finally:
                 if cursor:
                     cursor.close()
+
                 if conn:
                     conn.close()
 
