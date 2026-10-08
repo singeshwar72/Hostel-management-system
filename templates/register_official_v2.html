@@ -1,0 +1,121 @@
+{% extends 'public_base_v2.html' %}
+
+{% block title %}Official Registration | BCE Hostel{% endblock %}
+
+{% block content %}
+
+<div class="auth-wrap">
+
+    <section class="card auth-card">
+
+        <h1>Official Registration</h1>
+
+        <p class="subtitle">
+            Create your official hostel management account.
+        </p>
+
+        {% if error %}
+        <div class="alert error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="alert success">
+            {{ success }}
+        </div>
+
+        <p class="links">
+            <a href="{{ url_for('login') }}">
+                Go to Official Login
+            </a>
+        </p>
+
+        {% else %}
+
+        <form method="POST">
+
+            <div class="field">
+                <label>Staff ID</label>
+                <input
+                    name="user_id"
+                    type="text"
+                    placeholder="Enter Staff ID"
+                    required
+                    autofocus
+                >
+            </div>
+
+            <div class="field">
+                <label>Full Name</label>
+                <input
+                    name="name"
+                    type="text"
+                    placeholder="Enter full name"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label>Email</label>
+                <input
+                    name="email"
+                    type="email"
+                    placeholder="Enter official email"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label>Phone</label>
+                <input
+                    name="phone"
+                    type="tel"
+                    placeholder="Enter phone number"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label>Password</label>
+                <input
+                    name="password"
+                    type="password"
+                    placeholder="Create password"
+                    minlength="8"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label>Confirm Password</label>
+                <input
+                    name="confirm_password"
+                    type="password"
+                    placeholder="Confirm password"
+                    minlength="8"
+                    required
+                >
+            </div>
+
+            <button type="submit">
+                <i class="fa-solid fa-user-plus"></i>
+                Register as Official
+            </button>
+
+        </form>
+
+        <p class="links">
+            Already registered?
+            <a href="{{ url_for('login') }}">
+                Official Login
+            </a>
+        </p>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

@@ -1254,6 +1254,83 @@ def update_maintenance_complaint(complaint_id):
             cursor.close()
             conn.close()
     return redirect(url_for('maintenance_complaints', error='Could not connect to the database.'))
+@app.route('/register-official', methods=['GET', 'POST'])
+def register_official():
+    error = None
+    success = None
+
+    if request.method == 'POST':
+        user_id = request.form.get('user_id', '').strip()
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip()
+        phone = request.form.get('phone', '').strip()
+        password = request.form.get('password', '')
+        confirm_password = request.form.get('confirm_password', '')
+
+        if not all([user_id, name, email, phone, password, confirm_password]):
+            error = "Please fill in all fields."
+
+        elif password != confirm_password:
+            error = "Passwords do not match."
+
+        elif len(password) < 8:
+            error = "Password must be at least 8 characters."
+
+        else:
+            conn = None
+            cursor = None
+
+            try:
+                conn = connect_db()
+                cursor = conn.cursor(dictionary=True)
+
+                # Check if Staff ID already exists
+                cursor.execute(
+                    "SELECT User_ID FROM Users WHERE User_ID = %s",
+                    (user_id,)
+                )
+
+                if cursor.fetchone():
+                    error = "Staff ID already exists. Please use another Staff ID."
+
+                else:
+                    password_hash = generate_password_hash(password)
+
+                    cursor.execute(
+                        """
+                        INSERT INTO Users
+                        (User_ID, Password, Role, Name, Email, Phone)
+                        VALUES (%s, %s, 'Official', %s, %s, %s)
+                        """,
+                        (
+                            user_id,
+                            password_hash,
+                            name,
+                            email,
+                            phone
+                        )
+                    )
+
+                    conn.commit()
+                    success = "Official account created successfully. You can now sign in."
+
+            except Exception:
+                if conn:
+                    conn.rollback()
+
+                error = "Unable to create account. Please try again."
+
+            finally:
+                if cursor:
+                    cursor.close()
+                if conn:
+                    conn.close()
+
+    return render_template(
+        'register_official_v2.html',
+        error=error,
+        success=success
+    )
 
 
 if __name__ == '__main__':
