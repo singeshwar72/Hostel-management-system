@@ -49,7 +49,30 @@
           .account{font-size:11px}
         }
         @media(prefers-reduced-motion:reduce){.sidebar{transition:none}}
-    </style>{% block extra_style %}{% endblock %}
+    
+/* Visual polish: refined surfaces, focus states, and clearer hierarchy */
+:root{scroll-behavior:smooth}
+body{background:radial-gradient(ellipse at 90% 0%,rgba(99,102,241,.055),transparent 36%),var(--bg)}
+.sidebar{box-shadow:8px 0 32px rgba(15,23,42,.045)}
+.brand-mark{overflow:hidden}.brand-mark img{width:100%;height:100%;object-fit:contain}
+.nav a{transition:background .18s ease,color .18s ease,transform .18s ease}
+.nav a:hover{transform:translateX(3px)}.nav a.active{font-weight:700}
+.main{max-width:1800px}.top h1{letter-spacing:-.035em}.top p{line-height:1.6}
+.panel,.metric{transition:box-shadow .2s ease,border-color .2s ease,transform .2s ease}
+.panel:hover{border-color:#d5deeb;box-shadow:0 10px 28px rgba(15,23,42,.055)}
+.metric{position:relative;overflow:hidden}.metric:after{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--primary);opacity:.7}
+.metric:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(15,23,42,.07)}
+.metric span{display:block;line-height:1.5;margin-top:3px}
+button,.button{transition:transform .16s ease,box-shadow .16s ease,background .16s ease;box-shadow:0 2px 5px rgba(15,23,42,.07)}
+button:hover,.button:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(15,23,42,.12)}
+button:active,.button:active{transform:translateY(0)}
+.field input,.field select,.field textarea{transition:border-color .18s ease,box-shadow .18s ease}
+.field input:focus,.field select:focus,.field textarea:focus{box-shadow:0 0 0 3px rgba(99,102,241,.12)}
+th{position:sticky;top:0;z-index:1}tbody tr{transition:background .15s ease}tbody tr:hover{background:rgba(148,163,184,.07)}
+.badge{white-space:nowrap}::selection{background:rgba(99,102,241,.18)}:focus-visible{outline:3px solid rgba(99,102,241,.55);outline-offset:2px}
+@media(max-width:900px){.sidebar{box-shadow:18px 0 50px rgba(2,6,23,.2)}.panel:hover,.metric:hover{transform:none}.top{padding-top:2px}.table-wrap{border:1px solid var(--line);border-radius:10px}table{font-size:13px}th,td{padding:11px 9px}}
+@media(prefers-reduced-motion:reduce){:root{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
+</style>{% block extra_style %}{% endblock %}
 </head>
 <body>
     <button class="mobile-menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="portalSidebar"><i class="fa-solid fa-bars"></i></button>
