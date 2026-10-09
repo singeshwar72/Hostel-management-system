@@ -222,14 +222,15 @@ def register_student():
                     
     return render_template('register_student_v2.html', error=error, message=message)
 
+
 def send_reset_otp(email, otp):
-    smtp_host = os.environ.get('SMTP_HOST', 'smtp.gmail.com')
-    smtp_port = int(os.environ.get('SMTP_PORT', '465'))
+    smtp_host = os.environ.get('SMTP_HOST', 'smtp-relay.brevo.com')
+    smtp_port = int(os.environ.get('SMTP_PORT', '587'))
     smtp_user = os.environ.get('SMTP_USER')
     smtp_password = os.environ.get('SMTP_PASSWORD')
     smtp_from = os.environ.get('SMTP_FROM', smtp_user)
 
-    if not smtp_user or not smtp_password:
+    if not smtp_user or not smtp_password or not smtp_from:
         raise RuntimeError("Email service is not configured.")
 
     msg = EmailMessage()
@@ -240,22 +241,21 @@ def send_reset_otp(email, otp):
     msg.set_content(
         f"""BCE Hostel Student Portal
 
-Your password reset OTP is:
-
-{otp}
+Your password reset OTP is: {otp}
 
 This OTP is valid for 10 minutes.
 
 If you did not request a password reset, please ignore this email.
-
 Do not share this OTP with anyone.
 """
     )
 
-    with smtplib.SMTP_SSL(smtp_host, smtp_port) as smtp:
+    with smtplib.SMTP(smtp_host, smtp_port, timeout=20) as smtp:
+        smtp.ehlo()
+        smtp.starttls()
+        smtp.ehlo()
         smtp.login(smtp_user, smtp_password)
         smtp.send_message(msg)
-
 
 @app.route('/forgot_password', methods=['GET', 'POST'])
 def forgot_password():
@@ -295,6 +295,8 @@ def forgot_password():
                         error = "Student ID or registered email is incorrect."
 
                     else:
+                        session.pop('reset_verified', None)
+                        
                         otp = f"{secrets.randbelow(1000000):06d}"
 
                         session['reset_user_id'] = user_id
