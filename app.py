@@ -1,3 +1,6 @@
+import os
+from dotenv import load_dotenv
+load_dotenv()
 from flask import Flask, render_template, request, redirect, url_for, session
 import mysql.connector
 from datetime import date
@@ -15,15 +18,16 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 HOSTEL_UPI_ID = os.environ.get('HOSTEL_UPI_ID', 'singeshwarkumar1@ybl')
 
+
 def connect_db():
     return mysql.connector.connect(
-        host=os.environ.get('DB_HOST', 'localhost'),
-        port=int(os.environ.get('DB_PORT', '3306')),
-        database=os.environ.get('DB_NAME', 'HostelManagement'),
-        user=os.environ.get('DB_USER', 'root'),
+        host=os.environ['DB_HOST'],
+        port=int(os.environ['DB_PORT']),
+        database=os.environ['DB_NAME'],
+        user=os.environ['DB_USER'],
         password=os.environ['DB_PASSWORD']
     )
-    
+
 
 
 def log_audit(cursor, action, entity_type, entity_id=None, details=None):
