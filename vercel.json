@@ -3,7 +3,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "student.py",
+      "src": "app.py",
       "use": "@vercel/python"
     }
   ],
@@ -14,7 +14,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "student.py"
+      "dest": "app.py"
     }
   ]
 }
