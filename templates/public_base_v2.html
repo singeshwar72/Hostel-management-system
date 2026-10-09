@@ -25,4 +25,18 @@ input,select,textarea,button{max-width:100%}
   .public-main{width:calc(100% - 18px)}
   .auth-card,.card{padding:17px 13px}
 }
+
+/* Visual polish for public, registration and authentication pages */
+body{background:radial-gradient(ellipse at 10% 0%,rgba(79,70,229,.12),transparent 35%),radial-gradient(ellipse at 100% 35%,rgba(2,132,199,.10),transparent 32%),linear-gradient(135deg,#f8faff,#f8fafc 55%,#eff8ff)}
+.site-header{max-width:1200px}.site-nav a{transition:background .18s ease,color .18s ease,transform .18s ease}.site-nav a:hover{transform:translateY(-1px)}
+.card{box-shadow:0 18px 48px rgba(30,41,59,.09);border-color:rgba(226,232,240,.9);backdrop-filter:blur(12px)}
+.auth-card{position:relative;overflow:hidden}.auth-card:before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#4f46e5,#0284c7)}
+h1{letter-spacing:-.035em}.field input,.field select,.field textarea{transition:border-color .18s ease,box-shadow .18s ease}
+.field input:focus,.field select:focus,.field textarea:focus{box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+button,.button{transition:transform .16s ease,box-shadow .16s ease,background .16s ease;box-shadow:0 3px 8px rgba(79,70,229,.15)}
+button:hover,.button:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(79,70,229,.2)}button:active,.button:active{transform:translateY(0)}
+.feature{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}.feature:hover{transform:translateY(-3px);border-color:#c7d2fe;box-shadow:0 12px 25px rgba(30,41,59,.07)}
+:focus-visible{outline:3px solid rgba(79,70,229,.55);outline-offset:2px}::selection{background:rgba(79,70,229,.18)}
+@media(max-width:650px){.card{box-shadow:0 12px 30px rgba(30,41,59,.08)}.feature:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
 </style>{% block extra_style %}{% endblock %}</head><body><header class="site-header"><div class="brand"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy4UFNAqbkI9zrSJ5zNbcts31nRrYhZSFZXvUICF4OrDaFhrL6nUFHX1v6&s=10" alt="Logo" style="width: 50px; height: 50px; object-fit:cover; border-radius:11px;">BCE Hostel Portal</div><nav class="site-nav"><a href="/">Home</a><a href="/about">About</a><a href="/contact">Contact</a></nav></header><main class="public-main">{% block content %}{% endblock %}</main></body></html>
