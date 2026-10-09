@@ -1,3 +1,6 @@
+import os
+from dotenv import load_dotenv
+load_dotenv()
 from flask import Flask, render_template, request, redirect, url_for, session, send_file
 import mysql.connector
 import os
@@ -7,6 +10,11 @@ from decimal import Decimal, InvalidOperation
 from urllib.parse import urlencode
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
+import secrets
+import hashlib
+import time
+import smtplib
+from email.message import EmailMessage
 
 try:
     import qrcode
@@ -214,38 +222,258 @@ def register_student():
                     
     return render_template('register_student_v2.html', error=error, message=message)
 
+def send_reset_otp(email, otp):
+    smtp_host = os.environ.get('SMTP_HOST', 'smtp.gmail.com')
+    smtp_port = int(os.environ.get('SMTP_PORT', '465'))
+    smtp_user = os.environ.get('SMTP_USER')
+    smtp_password = os.environ.get('SMTP_PASSWORD')
+    smtp_from = os.environ.get('SMTP_FROM', smtp_user)
+
+    if not smtp_user or not smtp_password:
+        raise RuntimeError("Email service is not configured.")
+
+    msg = EmailMessage()
+    msg['Subject'] = 'BCE Hostel - Password Reset OTP'
+    msg['From'] = smtp_from
+    msg['To'] = email
+
+    msg.set_content(
+        f"""BCE Hostel Student Portal
+
+Your password reset OTP is:
+
+{otp}
+
+This OTP is valid for 10 minutes.
+
+If you did not request a password reset, please ignore this email.
+
+Do not share this OTP with anyone.
+"""
+    )
+
+    with smtplib.SMTP_SSL(smtp_host, smtp_port) as smtp:
+        smtp.login(smtp_user, smtp_password)
+        smtp.send_message(msg)
+
+
 @app.route('/forgot_password', methods=['GET', 'POST'])
 def forgot_password():
-    error, message = None, None
+    error = None
+    message = None
+
     if request.method == 'POST':
-        user_id = request.form.get('user_id').strip()
-        new_password = request.form.get('new_password')
-        confirm_password = request.form.get('confirm_password')
-        
-        if new_password != confirm_password:
-            error = "New passwords do not match!"
+        user_id = request.form.get('user_id', '').strip()
+        email = request.form.get('email', '').strip().lower()
+
+        if not user_id or not email:
+            error = "Please enter your Student ID and registered email."
+
         else:
             conn = connect_db()
+
             if conn:
                 cursor = conn.cursor(dictionary=True)
+
                 try:
-                    cursor.execute("SELECT * FROM Users WHERE User_ID = %s AND Role = 'Student'", (user_id,))
+                    cursor.execute(
+                        """
+                        SELECT User_ID, Email
+                        FROM Users
+                        WHERE User_ID = %s
+                          AND Role = 'Student'
+                        """,
+                        (user_id,)
+                    )
+
                     user = cursor.fetchone()
+
                     if not user:
-                        error = "Student ID not found in the system!"
+                        error = "Student ID or registered email is incorrect."
+
+                    elif not user.get('Email') or user['Email'].strip().lower() != email:
+                        error = "Student ID or registered email is incorrect."
+
                     else:
-                        hashed_pw = generate_password_hash(new_password)
-                        cursor.execute("UPDATE Users SET Password = %s WHERE User_ID = %s", (hashed_pw, user_id))
-                        conn.commit()
-                        message = "Password successfully reset! You can now log in."
-                except Exception as e:
-                    conn.rollback()
-                    error = f"Error updating password: {e}"
+                        otp = f"{secrets.randbelow(1000000):06d}"
+
+                        session['reset_user_id'] = user_id
+                        session['reset_email'] = email
+                        session['reset_otp_hash'] = hashlib.sha256(
+                            otp.encode()
+                        ).hexdigest()
+                        session['reset_otp_expires'] = time.time() + 600
+                        session['reset_otp_attempts'] = 0
+
+                        try:
+                            send_reset_otp(email, otp)
+
+                            message = (
+                                "A 6-digit OTP has been sent to your registered email."
+                            )
+
+                        except Exception:
+                            session.pop('reset_user_id', None)
+                            session.pop('reset_email', None)
+                            session.pop('reset_otp_hash', None)
+                            session.pop('reset_otp_expires', None)
+                            session.pop('reset_otp_attempts', None)
+
+                            error = (
+                                "Unable to send OTP right now. "
+                                "Please try again later."
+                            )
+
+                except Exception:
+                    error = "Unable to process password reset request."
+
                 finally:
                     cursor.close()
                     conn.close()
-                    
-    return render_template('forgot_password_v2.html', error=error, message=message)
+
+    return render_template(
+        'forgot_password_v2.html',
+        error=error,
+        message=message,
+        otp_stage=bool(session.get('reset_otp_hash'))
+    )
+
+
+@app.route('/verify_reset_otp', methods=['POST'])
+def verify_reset_otp():
+    error = None
+    message = None
+
+    user_id = session.get('reset_user_id')
+    otp_hash = session.get('reset_otp_hash')
+    expires = session.get('reset_otp_expires')
+    attempts = session.get('reset_otp_attempts', 0)
+
+    otp = request.form.get('otp', '').strip()
+
+    if not user_id or not otp_hash or not expires:
+        error = "Your reset session has expired. Please request a new OTP."
+
+    elif time.time() > expires:
+        session.pop('reset_otp_hash', None)
+        session.pop('reset_otp_expires', None)
+        session.pop('reset_otp_attempts', None)
+
+        error = "OTP has expired. Please request a new OTP."
+
+    elif attempts >= 5:
+        session.pop('reset_otp_hash', None)
+        session.pop('reset_otp_expires', None)
+        session.pop('reset_otp_attempts', None)
+
+        error = "Too many incorrect attempts. Please request a new OTP."
+
+    elif hashlib.sha256(otp.encode()).hexdigest() != otp_hash:
+        session['reset_otp_attempts'] = attempts + 1
+        error = "Invalid OTP. Please try again."
+
+    else:
+        session['reset_verified'] = True
+        session.pop('reset_otp_hash', None)
+        session.pop('reset_otp_expires', None)
+        session.pop('reset_otp_attempts', None)
+
+        message = "OTP verified successfully."
+
+    return render_template(
+        'forgot_password_v2.html',
+        error=error,
+        message=message,
+        otp_stage=bool(session.get('reset_otp_hash')),
+        reset_verified=session.get('reset_verified', False)
+    )
+
+
+@app.route('/reset_password', methods=['POST'])
+def reset_password():
+    if not session.get('reset_verified'):
+        return redirect(url_for('forgot_password'))
+
+    user_id = session.get('reset_user_id')
+
+    new_password = request.form.get('new_password', '')
+    confirm_password = request.form.get('confirm_password', '')
+
+    if not new_password or not confirm_password:
+        return render_template(
+            'forgot_password_v2.html',
+            error="Please enter and confirm your new password.",
+            otp_stage=False,
+            reset_verified=True
+        )
+
+    if new_password != confirm_password:
+        return render_template(
+            'forgot_password_v2.html',
+            error="New passwords do not match.",
+            otp_stage=False,
+            reset_verified=True
+        )
+
+    if len(new_password) < 8:
+        return render_template(
+            'forgot_password_v2.html',
+            error="Password must be at least 8 characters.",
+            otp_stage=False,
+            reset_verified=True
+        )
+
+    conn = connect_db()
+
+    if not conn:
+        return render_template(
+            'forgot_password_v2.html',
+            error="Unable to connect to the database.",
+            otp_stage=False,
+            reset_verified=True
+        )
+
+    cursor = conn.cursor()
+
+    try:
+        hashed_password = generate_password_hash(new_password)
+
+        cursor.execute(
+            """
+            UPDATE Users
+            SET Password = %s
+            WHERE User_ID = %s
+              AND Role = 'Student'
+            """,
+            (hashed_password, user_id)
+        )
+
+        conn.commit()
+
+        session.pop('reset_user_id', None)
+        session.pop('reset_email', None)
+        session.pop('reset_verified', None)
+
+        return redirect(
+            url_for(
+                'student_login',
+                error='Password reset successful. Please sign in with your new password.'
+            )
+        )
+
+    except Exception:
+        conn.rollback()
+
+        return render_template(
+            'forgot_password_v2.html',
+            error="Unable to reset password. Please try again.",
+            otp_stage=False,
+            reset_verified=True
+        )
+
+    finally:
+        cursor.close()
+        conn.close()
 
 @app.route('/about')
 def about():
@@ -784,3 +1012,23 @@ def submit_maintenance():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5002)
+
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "student.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "student.py"
+    }
+  ]
+}
